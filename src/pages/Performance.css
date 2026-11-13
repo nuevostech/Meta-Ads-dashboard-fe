@@ -1,0 +1,296 @@
+
+.performance-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 22px;
+  background: #090d25;
+  color: #f4f5ff;
+}
+
+/* Header */
+
+.performance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.performance-title h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.performance-title p {
+  font-size: 9px;
+  color: #9ba5ca;
+}
+
+.performance-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.performance-search {
+  width: 160px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid #222d5c;
+  border-radius: 20px;
+  background: #121a3c;
+}
+
+.performance-search span {
+  font-size: 17px;
+  color: #aab4d7;
+}
+
+.performance-search input {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 9px;
+}
+
+.performance-search input::placeholder {
+  color: #aab4d7;
+}
+
+.performance-updated {
+  padding: 10px 12px;
+  border: 1px solid #222d5c;
+  border-radius: 20px;
+  background: #121a3c;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.performance-refresh {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #392cff;
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.performance-refresh:hover {
+  background: #5147ff;
+}
+
+/* Summary Cards */
+
+.performance-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 17px;
+}
+
+.performance-stat {
+  height: 92px;
+  padding: 15px 17px;
+  border: 1px solid #202c5a;
+  border-radius: 15px;
+  background: #121a3b;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.performance-stat p {
+  font-size: 9px;
+  color: #9da8ce;
+  margin-bottom: 2px;
+}
+
+.performance-stat h2 {
+  font-size: 29px;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+
+.performance-stat span {
+  font-size: 9px;
+  color: #9da8ce;
+}
+
+/* Total Spend Card */
+
+.performance-stat.spend-stat {
+  background: #382cff;
+  border-color: #382cff;
+}
+
+.performance-stat.spend-stat p,
+.performance-stat.spend-stat span {
+  color: #d4d2ff;
+}
+
+.performance-stat.spend-stat h2 {
+  font-size: 29px;
+  color: #ffffff;
+}
+
+/* Chart Section */
+
+.performance-charts {
+  display: grid;
+  grid-template-columns: minmax(0, 1.95fr) minmax(230px, 1fr);
+  gap: 16px;
+}
+
+.performance-panel {
+  min-width: 0;
+  height: 260px;
+  padding: 17px;
+  background: #121a3b;
+  border: 1px solid #202c5a;
+  border-radius: 15px;
+}
+
+/* Leads Over Time */
+
+.performance-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.performance-panel h2 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chart-period {
+  padding: 9px 12px;
+  border-radius: 20px;
+  background: #1c2757;
+  color: #e2e5f4;
+  font-size: 8px;
+}
+
+.leads-chart {
+  width: 100%;
+  height: 185px;
+  margin-top: 5px;
+}
+
+.leads-chart svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* CPL by Account */
+
+.cpl-panel h2 {
+  margin-bottom: 13px;
+}
+
+.cpl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cpl-row {
+  display: grid;
+  grid-template-columns: 60px minmax(40px, 1fr) 32px;
+  align-items: center;
+  gap: 10px;
+}
+
+.cpl-name {
+  font-size: 9px;
+  color: #e7e9f8;
+}
+
+.cpl-progress {
+  width: 100%;
+  height: 5px;
+  border-radius: 10px;
+  background: #293665;
+  overflow: hidden;
+}
+
+.cpl-progress-fill {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.cpl-progress-fill.purple {
+  background: #686bff;
+}
+
+.cpl-progress-fill.orange {
+  background: #ff5c2e;
+}
+
+.cpl-row strong {
+  font-size: 9px;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .performance-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .performance-actions {
+    width: 100%;
+  }
+
+  .performance-search {
+    flex: 1;
+  }
+
+  .performance-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .performance-page {
+    padding: 16px 12px;
+  }
+
+  .performance-actions {
+    flex-wrap: wrap;
+  }
+
+  .performance-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .performance-stat {
+    height: 85px;
+    padding: 12px;
+  }
+
+  .performance-stat h2 {
+    font-size: 23px;
+  }
+
+  .performance-panel {
+    height: 250px;
+  }
+}
