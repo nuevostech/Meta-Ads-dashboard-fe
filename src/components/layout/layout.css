@@ -1,0 +1,304 @@
+
+/* ==========================================
+   GLOBAL LAYOUT
+========================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+.admin-layout {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+
+  background: #090d25;
+  color: #f4f5ff;
+}
+
+/* ==========================================
+   MAIN CONTENT AREA
+========================================== */
+
+.admin-main {
+  height: 100vh;
+  min-width: 0;
+  flex: 1;
+
+  margin-left: 236px;
+  transition: margin-left 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  background: #090d25;
+}
+
+/* ==========================================
+   FIXED TOPBAR
+========================================== */
+
+.admin-topbar {
+  width: 100%;
+  height: 80px;
+  min-height: 80px;
+
+  padding: 0 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  position: relative;
+  z-index: 900;
+
+  background: #090d25;
+  border-bottom: 1px solid #202747;
+}
+
+/* Topbar Heading */
+
+.topbar-left {
+  min-width: 0;
+}
+
+.topbar-left h2 {
+  font-size: 22px;
+  font-weight: 650;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.topbar-left p {
+  font-size: 11px;
+  color: #9da8ce;
+}
+
+/* Topbar Actions */
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 11px;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.topbar-search {
+  width: 188px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 0 12px;
+
+  background: #121a3b;
+  border: 1px solid #26345f;
+  border-radius: 25px;
+}
+
+.search-icon {
+  font-size: 19px;
+  color: #9da8ce;
+}
+
+.topbar-search input {
+  width: 100%;
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+  color: white;
+
+  font-size: 11px;
+}
+
+.topbar-search input::placeholder {
+  color: #9da8ce;
+}
+
+/* ==========================================
+   UPDATED TIME
+========================================== */
+
+.topbar-updated {
+  height: 38px;
+  padding: 0 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  white-space: nowrap;
+
+  background: #121a3b;
+  border: 1px solid #26345f;
+  border-radius: 25px;
+
+  color: #dce3ff;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.updated-dot {
+  width: 7px;
+  height: 7px;
+
+  background: #21c58b;
+  border-radius: 50%;
+}
+
+/* ==========================================
+   REFRESH BUTTON
+========================================== */
+
+.topbar-refresh {
+  height: 38px;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: #392cff;
+  color: white;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.topbar-refresh:hover {
+  background: #5147ff;
+}
+
+.topbar-refresh span {
+  font-size: 16px;
+}
+
+/* ==========================================
+   SCROLLABLE PAGE CONTENT
+========================================== */
+
+.admin-content {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  padding: 16px 16px 24px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: #090d25;
+
+  scrollbar-width: thin;
+  scrollbar-color: #35416d transparent;
+}
+
+.admin-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-content::-webkit-scrollbar-thumb {
+  background: #35416d;
+  border-radius: 10px;
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET
+========================================== */
+
+@media (max-width: 900px) {
+  .admin-main {
+    margin-left: 190px;
+  }
+
+  .admin-topbar {
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .topbar-left h2 {
+    font-size: 18px;
+  }
+
+  .topbar-search {
+    width: 150px;
+  }
+
+  .admin-content {
+    padding: 16px 16px 20px;
+  }
+}
+
+/* Collapsed Sidebar */
+.admin-layout.sidebar-collapsed .admin-main {
+  margin-left: 65px;
+}
+
+/* ==========================================
+   RESPONSIVE - MOBILE
+========================================== */
+
+@media (max-width: 550px) {
+  .admin-main {
+    margin-left: 160px;
+  }
+
+  .admin-topbar {
+    height: 65px;
+    min-height: 65px;
+    padding: 0 10px;
+    gap: 6px;
+  }
+
+  .topbar-left {
+    display: none;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    gap: 7px;
+  }
+
+  .topbar-search {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+  }
+
+  .topbar-updated {
+    display: none;
+  }
+
+  .topbar-refresh {
+    padding: 0 8px;
+  }
+
+  .admin-content {
+    padding: 15px 10px 15px;
+  }
+}

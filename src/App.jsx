@@ -4,11 +4,12 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 
-import Sidebar from "./components/Sidebar";
+// Common Layout
+import AdminLayout from "./components/layout/AdminLayout";
 
+// Pages
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AdAccounts from "./pages/AdAccounts";
@@ -20,42 +21,87 @@ import Settings from "./pages/Settings";
 
 import "./App.css";
 
-function AppContent() {
-  const location = useLocation();
+// Check whether admin is logged in
+function ProtectedRoute({ children }) {
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
 
-  // Login page without Sidebar
-  if (location.pathname === "/login") {
-    return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    );
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
 
-  return (
-    <div className="app-layout">
-      <Sidebar />
-
-      <main className="app-content">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/ad-accounts" element={<AdAccounts />} />
-          <Route path="/alerts" element={<Alerts />} />
-          <Route path="/performance" element={<Performance />} />
-          <Route path="/campaigns" element={<Campaigns />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </main>
-    </div>
-  );
+  return children;
 }
 
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <Routes>
+
+        {/* Default URL - Open Login First */}
+        <Route
+          path="/"
+          element={<Navigate to="/login" replace />}
+        />
+
+        {/* Login Page - Without Sidebar and Topbar */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        {/* Protected Pages - With Common Layout */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+
+          <Route
+            path="/ad-accounts"
+            element={<AdAccounts />}
+          />
+
+          <Route
+            path="/alerts"
+            element={<Alerts />}
+          />
+
+          <Route
+            path="/performance"
+            element={<Performance />}
+          />
+
+          <Route
+            path="/campaigns"
+            element={<Campaigns />}
+          />
+
+          <Route
+            path="/reports"
+            element={<Reports />}
+          />
+
+          <Route
+            path="/settings"
+            element={<Settings />}
+          />
+        </Route>
+
+        {/* Invalid Routes */}
+        <Route
+          path="*"
+          element={<Navigate to="/login" replace />}
+        />
+
+      </Routes>
     </BrowserRouter>
   );
 }

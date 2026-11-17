@@ -1,111 +1,119 @@
 
+/* ==========================================
+   AD ACCOUNTS PAGE
+========================================== */
+
 .ad-accounts-page {
   width: 100%;
-  min-height: 100vh;
-  padding: 18px;
+  min-height: 100%;
+  padding: 0;
   color: #f4f5ff;
   background: #090d25;
 }
 
-/* Header */
+/* ==========================================
+   PAGE HEADER
+========================================== */
 
 .ad-accounts-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 15px;
-  margin-bottom: 14px;
+  margin-bottom: 22px;
 }
 
 .ad-accounts-header h1 {
-  font-size: 16px;
+  font-size: 21px;
   font-weight: 600;
-  margin-bottom: 4px;
+  color: #ffffff;
+  margin-bottom: 6px;
 }
 
 .ad-accounts-header p {
-  font-size: 8px;
-  color: #9ba5ca;
+  font-size: 11px;
+  color: #9da8ce;
+  line-height: 1.5;
 }
 
-.ad-accounts-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* ==========================================
+   ACCOUNT SUMMARY
+========================================== */
+
+.account-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
 }
 
-.ad-account-search {
-  width: 132px;
-  height: 27px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 10px;
-  border: 1px solid #222d5c;
-  border-radius: 20px;
-  background: #121a3c;
-  color: #aab4d7;
-}
-
-.ad-account-search span {
-  font-size: 15px;
-}
-
-.ad-account-search input {
-  width: 100%;
+.account-summary-item {
   min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: white;
-  font-size: 8px;
+  padding: 16px 18px;
+  background: #121a3b;
+  border: 1px solid #202c5a;
+  border-radius: 13px;
+  transition: border-color 0.2s;
 }
 
-.ad-account-search input::placeholder {
-  color: #aab4d7;
+.account-summary-item:hover {
+  border-color: #4541a0;
 }
 
-.ad-account-updated {
-  padding: 8px 11px;
-  border-radius: 20px;
-  background: #121a3c;
-  border: 1px solid #222d5c;
-  font-size: 8px;
-  white-space: nowrap;
+.account-summary-item span {
+  display: block;
+  font-size: 10px;
+  color: #9da8ce;
+  margin-bottom: 9px;
 }
 
-.ad-account-refresh {
-  background: #392cff;
-  border: none;
-  color: white;
-  border-radius: 9px;
-  padding: 9px 14px;
-  font-size: 8px;
+.account-summary-item h2 {
+  font-size: 25px;
   font-weight: 600;
-  white-space: nowrap;
+  color: #ffffff;
 }
 
-.ad-account-refresh:hover {
-  background: #5147ff;
+.healthy-summary h2 {
+  color: #4ce5a0;
 }
 
-/* Filters */
+.low-summary h2 {
+  color: #ffca3d;
+}
+
+.critical-summary h2 {
+  color: #ff785e;
+}
+
+/* ==========================================
+   FILTERS
+========================================== */
 
 .account-filters {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 13px;
+  gap: 8px;
+  margin-bottom: 22px;
 }
 
 .account-filter {
-  padding: 7px 12px;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 7px 13px;
+
   border: 1px solid #202c5a;
   border-radius: 20px;
+
   background: #121a3b;
   color: #e2e5f4;
-  font-size: 8px;
+
+  font-size: 10px;
+  cursor: pointer;
+
   transition: 0.2s;
 }
 
@@ -116,51 +124,136 @@
 .account-filter.active {
   background: #392cff;
   border-color: #392cff;
-  color: white;
+  color: #ffffff;
 }
 
-/* Account Cards Grid */
+.filter-count {
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+/* ==========================================
+   SECTION HEADING
+========================================== */
+
+.account-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.account-section-heading h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.account-section-heading p {
+  font-size: 9px;
+  color: #9da8ce;
+}
+
+.account-refreshing {
+  font-size: 10px;
+  color: #858aff;
+}
+
+/* ==========================================
+   ACCOUNT CARDS GRID
+========================================== */
 
 .account-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 13px;
+  gap: 14px;
 }
 
-/* Individual Account Card */
+/* ==========================================
+   ACCOUNT CARD
+========================================== */
 
 .account-card {
   min-width: 0;
-  min-height: 116px;
-  padding: 13px;
+  min-height: 155px;
+
+  padding: 17px;
+
   border-radius: 14px;
   background: #121a3b;
   border: 1px solid #202c5a;
-  transition: border-color 0.2s;
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .account-card:hover {
   border-color: #4541a0;
+  transform: translateY(-2px);
 }
+
+/* Card Header */
 
 .account-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
-.account-card-header h3 {
-  font-size: 9px;
-  font-weight: 500;
-  color: #f4f5ff;
+.account-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
+
+.account-name-wrapper h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f4f5ff;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Status Dot */
+
+.account-status-dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+}
+
+.account-status-dot.healthy {
+  background: #20c58b;
+}
+
+.account-status-dot.low {
+  background: #ffca3d;
+}
+
+.account-status-dot.critical {
+  background: #ff592e;
+}
+
+.account-status-dot.stopped {
+  background: #ff5680;
+}
+
+/* Status Badge */
 
 .account-status {
-  padding: 4px 8px;
+  padding: 5px 9px;
   border-radius: 20px;
-  font-size: 7px;
+  font-size: 8px;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -184,30 +277,37 @@
   color: #ff9aa9;
 }
 
-/* Balance */
+/* ==========================================
+   BALANCE
+========================================== */
 
 .account-balance-label {
-  font-size: 8px;
+  font-size: 9px;
   color: #9da8ce;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .account-balance {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 600;
   letter-spacing: -0.5px;
-  margin-bottom: 8px;
+  color: #ffffff;
+  margin-bottom: 13px;
 }
 
-/* Spending Progress */
+/* ==========================================
+   PROGRESS BAR
+========================================== */
 
 .account-progress {
   width: 100%;
-  height: 5px;
+  height: 6px;
+
   background: #293665;
   border-radius: 10px;
+
   overflow: hidden;
-  margin-bottom: 9px;
+  margin-bottom: 12px;
 }
 
 .account-progress-fill {
@@ -232,77 +332,269 @@
   background: #ff5680;
 }
 
-.account-spend {
-  font-size: 7px;
+/* ==========================================
+   CARD FOOTER
+========================================== */
+
+.account-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-card-footer span {
+  font-size: 9px;
   color: #9da8ce;
 }
 
-/* Empty State */
+.account-card-footer strong {
+  font-size: 10px;
+  font-weight: 600;
+  color: #e8ebff;
+}
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
 
 .account-empty {
   grid-column: 1 / -1;
+
   text-align: center;
-  padding: 45px 20px;
+  padding: 55px 20px;
+
   background: #121a3b;
   border: 1px solid #202c5a;
   border-radius: 14px;
 }
 
+.account-empty-icon {
+  font-size: 30px;
+  color: #858aff;
+  margin-bottom: 10px;
+}
+
 .account-empty h3 {
-  font-size: 14px;
+  font-size: 15px;
   margin-bottom: 8px;
 }
 
 .account-empty p {
   font-size: 10px;
   color: #9da8ce;
+  margin-bottom: 16px;
 }
 
-/* Responsive */
+.account-empty button {
+  padding: 9px 17px;
+  border: none;
+  border-radius: 8px;
+  background: #392cff;
+  color: white;
+  font-size: 10px;
+  cursor: pointer;
+}
 
-@media (max-width: 1000px) {
+/* ==========================================
+   LARGE SCREENS
+========================================== */
+
+@media (min-width: 1500px) {
   .account-cards-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1100px) {
+  .account-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .ad-accounts-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .ad-accounts-actions {
-    width: 100%;
-  }
-
-  .ad-account-search {
-    flex: 1;
+  .account-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 600px) {
-  .ad-accounts-page {
-    padding: 15px 12px;
+/* ==========================================
+   SMALL TABLET
+========================================== */
+
+@media (max-width: 768px) {
+  .ad-accounts-header {
+    margin-bottom: 18px;
+  }
+
+  .ad-accounts-header h1 {
+    font-size: 19px;
+  }
+
+  .account-summary {
+    gap: 10px;
+  }
+
+  .account-summary-item {
+    padding: 14px;
   }
 
   .account-cards-grid {
-    grid-template-columns: 1fr;
+    gap: 11px;
   }
 
-  .ad-accounts-actions {
-    flex-wrap: wrap;
+  .account-card {
+    padding: 14px;
+  }
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 550px) {
+  .ad-accounts-page {
+    width: 100%;
   }
 
-  .ad-account-updated {
-    font-size: 7px;
+  .ad-accounts-header {
+    margin-bottom: 16px;
   }
+
+  .ad-accounts-header h1 {
+    font-size: 18px;
+  }
+
+  .ad-accounts-header p {
+    font-size: 10px;
+  }
+
+  /* Summary */
+
+  .account-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-bottom: 18px;
+  }
+
+  .account-summary-item {
+    padding: 12px;
+    border-radius: 11px;
+  }
+
+  .account-summary-item span {
+    font-size: 9px;
+    margin-bottom: 7px;
+  }
+
+  .account-summary-item h2 {
+    font-size: 21px;
+  }
+
+  /* Filters */
 
   .account-filters {
+    display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    padding-bottom: 5px;
+    gap: 7px;
+
+    padding-bottom: 8px;
+    margin-bottom: 17px;
+
+    scrollbar-width: none;
+  }
+
+  .account-filters::-webkit-scrollbar {
+    display: none;
   }
 
   .account-filter {
     flex-shrink: 0;
+    min-height: 32px;
+    padding: 7px 11px;
+    font-size: 9px;
+  }
+
+  /* Section Heading */
+
+  .account-section-heading {
+    margin-bottom: 12px;
+  }
+
+  .account-section-heading h2 {
+    font-size: 14px;
+  }
+
+  .account-section-heading p {
+    font-size: 9px;
+  }
+
+  /* Cards */
+
+  .account-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .account-card {
+    min-height: 145px;
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .account-card-header {
+    margin-bottom: 17px;
+  }
+
+  .account-name-wrapper h3 {
+    font-size: 11px;
+  }
+
+  .account-status {
+    font-size: 8px;
+  }
+
+  .account-balance {
+    font-size: 22px;
+  }
+
+  .account-card-footer span,
+  .account-card-footer strong {
+    font-size: 9px;
+  }
+
+  /* Empty State */
+
+  .account-empty {
+    padding: 40px 15px;
+  }
+}
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 380px) {
+  .account-summary-item {
+    padding: 10px;
+  }
+
+  .account-summary-item h2 {
+    font-size: 19px;
+  }
+
+  .account-summary-item span {
+    font-size: 8px;
+  }
+
+  .account-card {
+    padding: 13px;
+  }
+
+  .account-status {
+    padding: 4px 7px;
+    font-size: 7px;
   }
 }

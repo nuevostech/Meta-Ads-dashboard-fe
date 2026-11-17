@@ -1,41 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import "./Alerts.css";
 
-const initialAlerts = [
-  {
-    id: 1,
-    title: "Client B – Ads stopped",
-    description: "Balance is ₹0. Add funds to resume ads.",
-    time: "10 min ago",
-    type: "delivery",
-    icon: "pink",
-  },
-  {
-    id: 2,
-    title: "Client A – Critical balance",
-    description: "Balance ₹450, below the ₹500 limit.",
-    time: "20 min ago",
-    type: "balance",
-    icon: "orange",
-  },
-  {
-    id: 3,
-    title: "Shootza – Low balance",
-    description: "Balance ₹1,200, below ₹2,000.",
-    time: "32 min ago",
-    type: "balance",
-    icon: "yellow",
-  },
-  {
-    id: 4,
-    title: "Client E – Low balance",
-    description: "Balance ₹780, below ₹1,000.",
-    time: "45 min ago",
-    type: "balance",
-    icon: "yellow",
-  },
-];
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"
+).replace(/\/+$/, "");
+
+const API_URL = `${API_BASE_URL}/api/alerts`;
 
 const filters = [
   { label: "All", value: "all" },
@@ -44,147 +15,622 @@ const filters = [
   { label: "Resolved", value: "resolved" },
 ];
 
+const getToken = () =>
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
+
+// =====================================
+// FORMAT ALERT TIME
+// =====================================
+
+const formatAlertTime = (dateValue) => {
+  if (!dateValue) return "Time unavailable";
+
+  const date = new Date(dateValue);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Time unavailable";
+  }
+
+  const difference = Math.max(
+    0,
+    Date.now() - date.getTime()
+  );
+
+  const minutes = Math.floor(difference / 60000);
+
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min ago`;
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) return `${hours} hr ago`;
+
+  const days = Math.floor(hours / 24);
+
+  if (days < 30) return `${days} days ago`;
+
+  return date.toLocaleDateString("en-IN");
+};
+
+// =====================================
+// NORMALIZE BACKEND ALERT
+// =====================================
+
+const normalizeAlert = (alert) => {
+  const rawType = String(
+    alert.type ??
+    alert.alertType ??
+    alert.alert_type ??
+    alert.category ??
+    alert.alertCategory ??
+    ""
+  ).toLowerCase();
+
+  const title =
+    alert.title ||
+    alert.alertTitle ||
+    alert.alert_title ||
+    alert.message ||
+    alert.description ||
+    "Account Alert";
+
+  const description =
+    alert.description ||
+    alert.message ||
+    alert.alertMessage ||
+    alert.alert_message ||
+    "Please review this account alert.";
+
+  const combinedText = `${rawType} ${title} ${description}`.toLowerCase();
+
+  const type =
+    combinedText.includes("delivery") ||
+    combinedText.includes("stopped") ||
+    combinedText.includes("payment") ||
+    combinedText.includes("campaign")
+      ? "delivery"
+      : "balance";
+
+  let icon = "yellow";
+
+  if (
+    combinedText.includes("urgent") ||
+    combinedText.includes("critical") ||
+    combinedText.includes("stopped")
+  ) {
+    icon = "orange";
+  } else if (type === "delivery") {
+    icon = "pink";
+  }
+
+  return {
+    id: alert.id ?? alert.alertId ?? alert.alert_id,
+    title,
+    description,
+    time: formatAlertTime(
+      alert.createdAt ??
+      alert.created_at ??
+      alert.triggeredAt ??
+      alert.triggered_at ??
+      alert.updatedAt
+    ),
+    type,
+    icon,
+    originalData: alert,
+  };
+};
+
 function Alerts() {
-  const [alerts, setAlerts] = useState(initialAlerts);
+  const [alerts, setAlerts] = useState([]);
+  const [resolvedAlerts, setResolvedAlerts] = useState([]);
   const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [updated, setUpdated] = useState("11:35 AM");
   const [notified, setNotified] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [resolvingId, setResolvingId] = useState(null);
 
-  const counts = {
-    all: alerts.length,
-    balance: alerts.filter((a) => a.type === "balance").length,
-    delivery: alerts.filter((a) => a.type === "delivery").length,
-    resolved: 0,
-  };
+  // =====================================
+  // FETCH ALERTS API
+  // =====================================
 
-  const filteredAlerts = alerts.filter((alert) => {
-    const matchesSearch =
-      alert.title.toLowerCase().includes(search.toLowerCase()) ||
-      alert.description.toLowerCase().includes(search.toLowerCase());
+  const fetchAlerts = useCallback(async () => {
+    try {
+      setRefreshing(true);
+      setError("");
 
-    const matchesFilter =
-      activeFilter === "all" || alert.type === activeFilter;
+      const token = getToken();
 
-    return matchesSearch && matchesFilter;
-  });
+      if (!token) {
+        throw new Error(
+          "Authentication token not found. Please login again."
+        );
+      }
+
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(
+          "Session expired or access denied. Please login again."
+        );
+      }
+
+      if (!response.ok || data.success === false) {
+        throw new Error(
+          data.message || "Failed to fetch alerts."
+        );
+      }
+
+      // Supports common backend response structures
+      const alertList = Array.isArray(data)
+        ? data
+        : Array.isArray(data.alerts)
+        ? data.alerts
+        : Array.isArray(data.data)
+        ? data.data
+        : Array.isArray(data.data?.alerts)
+        ? data.data.alerts
+        : [];
+
+      const normalizedAlerts = alertList
+        .map(normalizeAlert)
+        .filter((alert) => alert.id !== null && alert.id !== undefined);
+
+      setAlerts(normalizedAlerts);
+
+    } catch (err) {
+      console.error("Fetch Alerts Error:", err);
+      setError(err.message || "Unable to load alerts.");
+      setAlerts([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  // =====================================
+  // INITIAL API CALL
+  // =====================================
+
+  useEffect(() => {
+    fetchAlerts();
+  }, [fetchAlerts]);
+
+  // =====================================
+  // GLOBAL SEARCH
+  // =====================================
+
+  useEffect(() => {
+    const handleGlobalSearch = (event) => {
+      setSearch(event.detail || "");
+    };
+
+    window.addEventListener(
+      "account-search",
+      handleGlobalSearch
+    );
+
+    return () => {
+      window.removeEventListener(
+        "account-search",
+        handleGlobalSearch
+      );
+    };
+  }, []);
+
+  // =====================================
+  // GLOBAL REFRESH EVENT
+  // =====================================
+
+  useEffect(() => {
+    const handleGlobalRefresh = () => {
+      fetchAlerts();
+    };
+
+    window.addEventListener(
+      "dashboard-refresh",
+      handleGlobalRefresh
+    );
+
+    return () => {
+      window.removeEventListener(
+        "dashboard-refresh",
+        handleGlobalRefresh
+      );
+    };
+  }, [fetchAlerts]);
+
+  // =====================================
+  // MANUAL REFRESH
+  // =====================================
 
   const handleRefresh = () => {
-    setUpdated(
-      new Date().toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    );
+    if (!refreshing) {
+      fetchAlerts();
+    }
   };
+
+  // =====================================
+  // ALERT COUNTS
+  // =====================================
+
+  const counts = useMemo(() => {
+    return {
+      all: alerts.length,
+      balance: alerts.filter(
+        (alert) => alert.type === "balance"
+      ).length,
+      delivery: alerts.filter(
+        (alert) => alert.type === "delivery"
+      ).length,
+      resolved: resolvedAlerts.length,
+    };
+  }, [alerts, resolvedAlerts]);
+
+  // =====================================
+  // SEARCH AND FILTER
+  // =====================================
+
+  const filteredAlerts = useMemo(() => {
+    const sourceAlerts =
+      activeFilter === "resolved"
+        ? resolvedAlerts
+        : alerts;
+
+    return sourceAlerts.filter((alert) => {
+      const matchesFilter =
+        activeFilter === "all" ||
+        activeFilter === "resolved" ||
+        alert.type === activeFilter;
+
+      const searchText = search.trim().toLowerCase();
+
+      const matchesSearch =
+        alert.title.toLowerCase().includes(searchText) ||
+        alert.description.toLowerCase().includes(searchText);
+
+      return matchesFilter && matchesSearch;
+    });
+  }, [alerts, resolvedAlerts, activeFilter, search]);
+
+  // =====================================
+  // NOTIFY CLIENT
+  // =====================================
 
   const handleNotify = (id) => {
     setNotified((previous) =>
-      previous.includes(id) ? previous : [...previous, id]
+      previous.includes(id)
+        ? previous
+        : [...previous, id]
     );
   };
+
+  // =====================================
+  // RESOLVE ALERT API
+  // =====================================
+
+  const handleResolve = async (id) => {
+    if (resolvingId !== null) return;
+
+    try {
+      setResolvingId(id);
+
+      const token = getToken();
+
+      if (!token) {
+        throw new Error(
+          "Authentication token not found. Please login again."
+        );
+      }
+
+      const response = await fetch(
+        `${API_URL}/${encodeURIComponent(id)}/resolve`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(
+          "Session expired or access denied. Please login again."
+        );
+      }
+
+      if (!response.ok || data.success === false) {
+        throw new Error(
+          data.message || "Failed to resolve alert."
+        );
+      }
+
+      const resolvedAlert = alerts.find(
+        (alert) => String(alert.id) === String(id)
+      );
+
+      if (resolvedAlert) {
+        setAlerts((previous) =>
+          previous.filter(
+            (alert) => String(alert.id) !== String(id)
+          )
+        );
+
+        setResolvedAlerts((previous) => [
+          ...previous,
+          {
+            ...resolvedAlert,
+            time: "Resolved just now",
+          },
+        ]);
+      }
+
+      setNotified((previous) =>
+        previous.filter(
+          (notifiedId) => String(notifiedId) !== String(id)
+        )
+      );
+
+    } catch (err) {
+      console.error("Resolve Alert Error:", err);
+      setError(err.message || "Unable to resolve alert.");
+    } finally {
+      setResolvingId(null);
+    }
+  };
+
+  // =====================================
+  // RENDER
+  // =====================================
 
   return (
     <div className="alerts-page">
 
-      {/* Header */}
+      {/* PAGE HEADER */}
+
       <header className="alerts-header">
         <div className="alerts-title">
           <h1>Alerts</h1>
-          <p>Fix these first so ads keep running.</p>
+          <p>
+            Fix these first so ads keep running.
+          </p>
         </div>
 
-        <div className="alerts-actions">
-
-          <div className="alerts-search">
-            <span>⌕</span>
-            <input
-              type="text"
-              placeholder="Search account..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          <div className="alerts-updated">
-            Updated {updated}
-          </div>
-
-          <button
-            className="alerts-refresh"
-            onClick={handleRefresh}
-          >
-            Refresh
-          </button>
-
-        </div>
+        {/* <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={refreshing}
+        >
+          {refreshing ? "Refreshing..." : "Refresh"}
+        </button> */}
       </header>
 
-      {/* Filter Tabs */}
+      {/* ALERT SUMMARY */}
+
+      <section className="alerts-summary">
+
+        <div className="alerts-summary-card">
+          <span>Total Active Alerts</span>
+          <h2>{counts.all}</h2>
+        </div>
+
+        <div className="alerts-summary-card balance-summary">
+          <span>Balance Alerts</span>
+          <h2>{counts.balance}</h2>
+        </div>
+
+        <div className="alerts-summary-card delivery-summary">
+          <span>Delivery Alerts</span>
+          <h2>{counts.delivery}</h2>
+        </div>
+
+        <div className="alerts-summary-card resolved-summary">
+          <span>Resolved</span>
+          <h2>{counts.resolved}</h2>
+        </div>
+
+      </section>
+
+      {/* FILTER TABS */}
+
       <div className="alerts-filters">
         {filters.map((filter) => (
           <button
+            type="button"
             key={filter.value}
             className={`alerts-filter ${
               activeFilter === filter.value ? "active" : ""
             }`}
             onClick={() => setActiveFilter(filter.value)}
           >
-            {filter.label} {counts[filter.value]}
+            {filter.label}
+
+            <span className="alerts-filter-count">
+              {counts[filter.value]}
+            </span>
           </button>
         ))}
       </div>
 
-      {/* Needs Action */}
+      {/* ALERTS PANEL */}
+
       <section className="alerts-panel">
 
         <div className="alerts-panel-header">
-          <h2>
-            {activeFilter === "resolved" ? "Resolved" : "Needs action"}
-          </h2>
 
-          <span className="alerts-limits">
-            Limits: ₹2,000 • ₹1,000 • ₹500
-          </span>
-        </div>
+          <div>
+            <h2>
+              {activeFilter === "resolved"
+                ? "Resolved Alerts"
+                : "Needs Action"}
+            </h2>
 
-        <div className="alerts-list">
+            <p>
+              {activeFilter === "resolved"
+                ? "Previously resolved alerts."
+                : "Accounts that need your attention."}
+            </p>
+          </div>
 
-          {filteredAlerts.map((alert) => (
-            <div className="alerts-row" key={alert.id}>
+          <div className="alerts-panel-right">
 
-              <div className={`alerts-icon ${alert.icon}`}>
-                !
-              </div>
-
-              <div className="alerts-description">
-                <h3>{alert.title}</h3>
-                <p>{alert.description}</p>
-              </div>
-
-              <span className="alerts-time">
-                {alert.time}
+            {refreshing && (
+              <span className="alerts-refreshing">
+                Refreshing...
               </span>
+            )}
 
-              <button
-                className={`notify-button ${
-                  notified.includes(alert.id) ? "notified" : ""
-                }`}
-                onClick={() => handleNotify(alert.id)}
-              >
-                {notified.includes(alert.id) ? "Notified" : "Notify client"}
-              </button>
+            <span className="alerts-limits">
+              Limits: ₹2,000 • ₹1,000 • ₹500
+            </span>
 
-            </div>
-          ))}
-
-          {filteredAlerts.length === 0 && (
-            <div className="alerts-empty">
-              No alerts found.
-            </div>
-          )}
+          </div>
 
         </div>
+
+        {/* ERROR */}
+
+        {error && (
+          <div className="alerts-empty">
+            <h3>Unable to process alerts</h3>
+            <p>{error}</p>
+
+            <button
+              type="button"
+              onClick={handleRefresh}
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* LOADING */}
+
+        {loading && (
+          <div className="alerts-empty">
+            <h3>Loading alerts...</h3>
+            <p>Please wait while we fetch alerts.</p>
+          </div>
+        )}
+
+        {/* ALERT LIST */}
+
+        {!loading && !error && (
+          <div className="alerts-list">
+
+            {filteredAlerts.map((alert) => {
+              const isNotified = notified.includes(alert.id);
+              const isResolved =
+                activeFilter === "resolved";
+
+              return (
+                <div className="alerts-row" key={alert.id}>
+
+                  {/* Icon */}
+
+                  <div className={`alerts-icon ${alert.icon}`}>
+                    !
+                  </div>
+
+                  {/* Description */}
+
+                  <div className="alerts-description">
+                    <h3>{alert.title}</h3>
+                    <p>{alert.description}</p>
+                  </div>
+
+                  {/* Time */}
+
+                  <span className="alerts-time">
+                    {alert.time}
+                  </span>
+
+                  {/* Actions */}
+
+                  <div className="alerts-row-actions">
+
+                    {!isResolved && (
+                      <>
+                        <button
+                          type="button"
+                          className={`notify-button ${
+                            isNotified ? "notified" : ""
+                          }`}
+                          onClick={() => handleNotify(alert.id)}
+                        >
+                          {isNotified
+                            ? "Notified"
+                            : "Notify client"}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="resolve-button"
+                          disabled={resolvingId !== null}
+                          onClick={() => handleResolve(alert.id)}
+                        >
+                          {resolvingId === alert.id
+                            ? "Resolving..."
+                            : "Resolve"}
+                        </button>
+                      </>
+                    )}
+
+                    {isResolved && (
+                      <span className="resolved-label">
+                        Resolved
+                      </span>
+                    )}
+
+                  </div>
+
+                </div>
+              );
+            })}
+
+            {/* EMPTY STATE */}
+
+            {filteredAlerts.length === 0 && (
+              <div className="alerts-empty">
+
+                <div className="alerts-empty-icon">
+                  ✓
+                </div>
+
+                <h3>No alerts found</h3>
+
+                <p>
+                  Try changing your search or selected filter.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveFilter("all");
+                    setSearch("");
+                  }}
+                >
+                  View All Alerts
+                </button>
+
+              </div>
+            )}
+
+          </div>
+        )}
 
       </section>
 

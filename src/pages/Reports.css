@@ -1,92 +1,34 @@
 
 .reports-page {
   width: 100%;
-  min-height: 100vh;
-  padding: 22px;
+  min-height: 100%;
+  padding: 0 0 22px;
   background: #090d25;
   color: #f4f5ff;
+  box-sizing: border-box;
 }
 
-/* Header */
+/* Page Heading */
 
 .reports-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
   gap: 12px;
-  margin-bottom: 17px;
+  margin-bottom: 24px;
 }
 
-.reports-title h1 {
-  font-size: 20px;
+.reports-header h1 {
+  font-size: 24px;
   font-weight: 600;
-  margin-bottom: 4px;
+  color: #f4f5ff;
+  margin: 0 0 6px;
 }
 
-.reports-title p {
-  font-size: 9px;
+.reports-header p {
+  font-size: 13px;
   color: #9ba5ca;
-}
-
-.reports-actions {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.reports-search {
-  width: 160px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  border: 1px solid #222d5c;
-  border-radius: 20px;
-  background: #121a3c;
-}
-
-.reports-search span {
-  font-size: 17px;
-  color: #aab4d7;
-}
-
-.reports-search input {
-  width: 100%;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 9px;
-}
-
-.reports-search input::placeholder {
-  color: #aab4d7;
-}
-
-.reports-updated {
-  padding: 10px 12px;
-  border: 1px solid #222d5c;
-  border-radius: 20px;
-  background: #121a3c;
-  font-size: 9px;
-  white-space: nowrap;
-}
-
-.reports-refresh {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 10px;
-  background: #392cff;
-  color: white;
-  font-size: 9px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.reports-refresh:hover {
-  background: #5147ff;
+  margin: 0;
 }
 
 /* Report Cards */
@@ -99,7 +41,8 @@
 }
 
 .report-card {
-  height: 131px;
+  min-width: 0;
+  min-height: 131px;
   padding: 17px;
   border-radius: 15px;
   display: flex;
@@ -107,6 +50,7 @@
   align-items: flex-start;
   justify-content: space-between;
   border: 1px solid transparent;
+  box-sizing: border-box;
 }
 
 .report-card.weekly {
@@ -130,6 +74,7 @@
 .report-category {
   font-size: 9px;
   opacity: 0.8;
+  margin: 0;
 }
 
 .report-card h2 {
@@ -137,17 +82,18 @@
   line-height: 1.2;
   font-weight: 500;
   max-width: 220px;
+  margin: 8px 0;
 }
 
 .report-buttons {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
 }
 
 .report-buttons button {
   min-width: 35px;
-  padding: 4px 9px;
+  padding: 5px 10px;
   border: none;
   border-radius: 20px;
   background: #ffffff;
@@ -155,10 +101,23 @@
   font-size: 8px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .report-buttons button:hover {
   background: #e8e8e8;
+  transform: translateY(-1px);
+}
+
+.reports-empty {
+  grid-column: 1 / -1;
+  padding: 30px;
+  text-align: center;
+  border: 1px solid #202c5a;
+  border-radius: 15px;
+  background: #121a3b;
+  color: #9da8ce;
+  font-size: 10px;
 }
 
 /* Recent Exports */
@@ -170,12 +129,36 @@
   border: 1px solid #202c5a;
   border-radius: 15px;
   background: #121a3b;
+  box-sizing: border-box;
 }
 
-.recent-exports > h2 {
+.exports-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.recent-exports > .exports-header h2 {
   font-size: 14px;
   font-weight: 500;
-  margin-bottom: 12px;
+  margin: 0;
+}
+
+.exports-header p {
+  color: #8995bd;
+  font-size: 9px;
+  margin: 5px 0 0;
+}
+
+.exports-count {
+  padding: 7px 11px;
+  border-radius: 20px;
+  background: #1c2757;
+  color: #c7cdeb;
+  font-size: 8px;
+  white-space: nowrap;
 }
 
 .exports-list {
@@ -184,21 +167,60 @@
 }
 
 .export-row {
-  min-height: 47px;
+  min-height: 55px;
   display: grid;
-  grid-template-columns: 1.5fr 0.9fr auto;
+  grid-template-columns: minmax(0, 1.5fr) 0.9fr auto;
   align-items: center;
   gap: 15px;
   padding: 7px 0;
   border-bottom: 1px solid #242e55;
+  box-sizing: border-box;
+}
+
+.export-row:last-child {
+  border-bottom: none;
+}
+
+.export-file-info {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.export-file-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #1c2757;
+  color: #a9adff;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.export-file-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .export-name {
   font-size: 9px;
   color: #f0f2ff;
+  overflow-wrap: anywhere;
 }
 
 .export-date {
+  font-size: 8px;
+  color: #9da8ce;
+}
+
+.export-date-mobile {
+  display: none;
   font-size: 8px;
   color: #9da8ce;
 }
@@ -212,6 +234,7 @@
   color: #17172b;
   font-size: 8px;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .export-download:hover {
@@ -225,50 +248,90 @@
   font-size: 10px;
 }
 
-/* Responsive */
+.reports-refresh-status {
+  margin: 12px 0 0;
+  color: #9da8ce;
+  font-size: 9px;
+}
+
+/* Tablet */
 
 @media (max-width: 1000px) {
-  .reports-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .reports-actions {
-    width: 100%;
-  }
-
-  .reports-search {
-    flex: 1;
-  }
-
   .reports-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
+/* Mobile */
+
 @media (max-width: 600px) {
   .reports-page {
-    padding: 16px 12px;
+    padding: 0 0 16px;
   }
 
-  .reports-actions {
-    flex-wrap: wrap;
+  .reports-header {
+    margin-bottom: 18px;
+  }
+
+  .reports-header h1 {
+    font-size: 20px;
+  }
+
+  .reports-header p {
+    font-size: 11px;
   }
 
   .reports-cards {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .report-card {
-    height: 125px;
+    min-height: 125px;
+  }
+
+  .report-card h2 {
+    font-size: 18px;
+  }
+
+  .recent-exports {
+    padding: 14px;
   }
 
   .export-row {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
   }
 
   .export-date {
     display: none;
+  }
+
+  .export-date-mobile {
+    display: block;
+  }
+
+  .export-download {
+    min-width: 62px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .reports-page {
+    padding: 0 0 12px;
+  }
+
+  .export-file-info {
+    gap: 7px;
+  }
+
+  .export-file-icon {
+    width: 29px;
+    height: 29px;
+  }
+
+  .export-name {
+    font-size: 8px;
   }
 }

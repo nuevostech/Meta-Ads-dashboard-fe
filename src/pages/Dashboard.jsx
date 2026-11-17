@@ -1,129 +1,201 @@
-import { useState } from "react";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import "./Dashboard.css";
 
-const accounts = [
-  {
-    name: "NTQS Digital",
-    balance: "₹8,500",
-    spend: "₹3,200",
-    status: "Healthy",
-    type: "healthy",
-  },
-  {
-    name: "Shootza",
-    balance: "₹1,200",
-    spend: "₹1,050",
-    status: "Low Balance",
-    type: "low",
-  },
-  {
-    name: "Client A",
-    balance: "₹450",
-    spend: "₹450",
-    status: "Critical",
-    type: "critical",
-  },
-  {
-    name: "Client B",
-    balance: "₹0",
-    spend: "₹0",
-    status: "Ads Stopped",
-    type: "stopped",
-  },
-  {
-    name: "Client C",
-    balance: "₹5,900",
-    spend: "₹2,300",
-    status: "Healthy",
-    type: "healthy",
-  },
-];
+const API_URL = "http://localhost:5000/api/dashboard";
 
-const alerts = [
-  {
-    type: "pink",
-    title: "Client B – Ads stopped",
-    description: "Balance is ₹0. Add funds to resume ads.",
-  },
-  {
-    type: "orange",
-    title: "Client A – Critical balance",
-    description: "Balance ₹450, below the ₹500 limit.",
-  },
-  {
-    type: "yellow",
-    title: "Shootza – Low balance",
-    description: "Balance ₹1,200, below ₹2,000.",
-  },
-];
+const formatCurrency = (value, currency = "INR") => {
+  const amount = Number(value || 0);
+
+  if (currency === "INR") {
+    return `₹${amount.toLocaleString("en-IN", {
+      maximumFractionDigits: 2,
+    })}`;
+  }
+
+  return `${currency || "INR"} ${amount.toLocaleString("en-IN", {
+    maximumFractionDigits: 2,
+  })}`;
+};
+
+const getBalanceClass = (status) => {
+  switch (status) {
+    case "Healthy":
+      return "healthy";
+    case "Low Balance":
+      return "low";
+    case "Critical":
+      return "critical";
+    case "Urgent":
+      return "stopped";
+    default:
+      return "";
+  }
+};
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
-  const [updated, setUpdated] = useState("11:35 AM");
-  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const filteredAccounts = accounts.filter((account) =>
-    account.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // Fetch dashboard data
+  const fetchDashboard = useCallback(async () => {
+    try {
+      setError("");
 
-  const handleRefresh = () => {
-    setLoading(true);
+      const token =
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("token");
 
-    setUpdated(
-      new Date().toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+      if (!token) {
+        throw new Error("Please log in to access the dashboard.");
+      }
+
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to load dashboard data."
+        );
+      }
+
+      if (!data.success) {
+        throw new Error(data.message || "Dashboard request failed.");
+      }
+
+      setDashboardData(data);
+    } catch (err) {
+      setError(err.message || "Unable to load dashboard.");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  // Initial loading
+  useEffect(() => {
+    fetchDashboard();
+  }, [fetchDashboard]);
+
+  // Global search
+  useEffect(() => {
+    const handleSearch = (event) => {
+      setSearch(event.detail || "");
+    };
+
+    window.addEventListener("account-search", handleSearch);
+
+    return () => {
+      window.removeEventListener("account-search", handleSearch);
+    };
+  }, []);
+
+  // Refresh dashboard
+  const handleRefresh = useCallback(() => {
+    if (refreshing) return;
+
+    setRefreshing(true);
+    fetchDashboard();
+  }, [refreshing, fetchDashboard]);
+
+  useEffect(() => {
+    window.addEventListener("dashboard-refresh", handleRefresh);
+
+    return () => {
+      window.removeEventListener("dashboard-refresh", handleRefresh);
+    };
+  }, [handleRefresh]);
+
+  // Actual backend response
+  const summary = dashboardData?.summary || {};
+  const accounts = dashboardData?.accounts || [];
+  const lowBalanceAccounts = dashboardData?.lowBalanceAccounts || [];
+
+  // Filter accounts
+  const filteredAccounts = useMemo(() => {
+    const value = search.trim().toLowerCase();
+
+    if (!value) return accounts;
+
+    return accounts.filter((account) =>
+      (account.accountName || "").toLowerCase().includes(value)
     );
+  }, [search, accounts]);
 
-    setTimeout(() => setLoading(false), 500);
+  // Dashboard navigation
+  const handleViewAccounts = () => {
+    navigate("/ad-accounts");
   };
+
+  const handleViewAlerts = () => {
+    navigate("/alerts");
+  };
+
+  // Loading
+  if (loading) {
+    return (
+      <div className="dashboard-page">
+        <p className="dashboard-refresh-status">
+          Loading dashboard data...
+        </p>
+      </div>
+    );
+  }
+
+  // Error
+  if (error) {
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-error">
+          <p>{error}</p>
+          <button type="button" onClick={fetchDashboard}>
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-page">
 
-      {/* Dashboard Header */}
-      <header className="dashboard-header">
-        <div className="dashboard-heading">
-          <h1>Meta Ads Monitoring</h1>
-          <p>All client ad accounts in one place.</p>
+      {/* PAGE HEADER */}
+      <div className="dashboard-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p>
+            Overview of all client ad accounts and performance.
+          </p>
         </div>
+      </div>
 
-        <div className="dashboard-header-actions">
-
-          <div className="dashboard-search">
-            <span>⌕</span>
-
-            <input
-              type="text"
-              placeholder="Search account..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          <div className="dashboard-updated">
-            Updated {updated}
-          </div>
-
-          <button
-            className="dashboard-refresh"
-            onClick={handleRefresh}
-            disabled={loading}
-          >
-            {loading ? "Refreshing..." : "Refresh"}
-          </button>
-
-        </div>
-      </header>
-
-      {/* Summary Cards */}
+      {/* SUMMARY CARDS */}
       <section className="dashboard-stats">
 
         <div className="stat-card">
           <div className="stat-icon purple">▤</div>
           <div>
-            <h2>12</h2>
+            <h2>{summary.totalAccounts ?? 0}</h2>
             <p>Ad accounts</p>
           </div>
         </div>
@@ -131,7 +203,7 @@ export default function Dashboard() {
         <div className="stat-card">
           <div className="stat-icon slate">◁</div>
           <div>
-            <h2>28</h2>
+            <h2>{summary.totalActiveCampaigns ?? 0}</h2>
             <p>Active campaigns</p>
           </div>
         </div>
@@ -139,7 +211,7 @@ export default function Dashboard() {
         <div className="stat-card">
           <div className="stat-icon gold">⚠</div>
           <div>
-            <h2>3</h2>
+            <h2>{summary.lowBalanceCount ?? 0}</h2>
             <p>Low balance</p>
           </div>
         </div>
@@ -147,45 +219,77 @@ export default function Dashboard() {
         <div className="stat-card">
           <div className="stat-icon coral">⊘</div>
           <div>
-            <h2>1</h2>
-            <p>Ads stopped</p>
+            <h2>{summary.urgentBalanceCount ?? 0}</h2>
+            <p>Urgent balance</p>
           </div>
         </div>
 
       </section>
 
-      {/* Accounts and Alerts */}
+      {/* ACCOUNTS AND ALERTS */}
       <section className="dashboard-middle">
 
-        {/* Ad Accounts */}
+        {/* AD ACCOUNTS */}
         <div className="dashboard-panel accounts-panel">
 
           <div className="panel-header">
-            <h2>Ad accounts</h2>
-            <button>View all ›</button>
+            <div>
+              <h2>Ad accounts</h2>
+              <p className="panel-subtitle">
+                Overview of your client accounts
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleViewAccounts}
+              className="panel-view-button"
+            >
+              View all ›
+            </button>
           </div>
 
           <div className="table-wrapper">
             <table className="accounts-table">
-
               <thead>
                 <tr>
                   <th>Account</th>
                   <th>Balance</th>
-                  <th>Today's spend</th>
+                  <th>Total spend</th>
                   <th>Status</th>
                 </tr>
               </thead>
 
               <tbody>
                 {filteredAccounts.map((account) => (
-                  <tr key={account.name}>
-                    <td>{account.name}</td>
-                    <td>{account.balance}</td>
-                    <td>{account.spend}</td>
+                  <tr key={account.id}>
+                    <td className="account-name">
+                      {account.accountName}
+                    </td>
+
                     <td>
-                      <span className={`account-badge ${account.type}`}>
-                        {account.status}
+                      {account.availableBalance !== null
+                        ? formatCurrency(
+                            account.availableBalance,
+                            account.currency
+                          )
+                        : "Unknown"}
+                    </td>
+
+                    <td>
+                      {formatCurrency(
+                        account.totalSpend,
+                        account.currency
+                      )}
+                    </td>
+
+                    <td>
+                      <span
+                        className={`account-badge ${getBalanceClass(
+                          account.balanceStatus
+                        )}`}
+                      >
+                        {account.balanceStatus}
                       </span>
                     </td>
                   </tr>
@@ -194,41 +298,83 @@ export default function Dashboard() {
                 {filteredAccounts.length === 0 && (
                   <tr>
                     <td colSpan="4" className="no-accounts">
-                      No matching accounts found.
+                      {search
+                        ? "No matching accounts found."
+                        : "No ad accounts available."}
                     </td>
                   </tr>
                 )}
               </tbody>
-
             </table>
           </div>
 
+          {refreshing && (
+            <p className="dashboard-refresh-status">
+              Refreshing dashboard...
+            </p>
+          )}
+
         </div>
 
-        {/* Alerts */}
+        {/* LOW BALANCE ALERTS */}
         <div className="dashboard-panel alerts-panel">
 
           <div className="panel-header">
-            <h2>Alerts</h2>
-            <button>View all ›</button>
+            <div>
+              <h2>Alerts</h2>
+              <p className="panel-subtitle">
+                Accounts that need attention
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleViewAlerts}
+              className="panel-view-button"
+            >
+              View all ›
+            </button>
           </div>
 
           <div className="alerts-list">
 
-            {alerts.map((alert) => (
-              <div className="alert-item" key={alert.title}>
+            {lowBalanceAccounts.map((account) => (
+              <div className="alert-item" key={account.id}>
 
-                <div className={`alert-circle ${alert.type}`}>
+                <div
+                  className={`alert-circle ${
+                    account.balanceStatus === "Urgent"
+                      ? "pink"
+                      : account.balanceStatus === "Critical"
+                      ? "orange"
+                      : "yellow"
+                  }`}
+                >
                   !
                 </div>
 
                 <div className="alert-content">
-                  <h3>{alert.title}</h3>
-                  <p>{alert.description}</p>
+                  <h3>
+                    {account.accountName} – {account.balanceStatus}
+                  </h3>
+
+                  <p>
+                    Available balance:{" "}
+                    {account.availableBalance !== null
+                      ? formatCurrency(
+                          account.availableBalance,
+                          account.currency
+                        )
+                      : "Unknown"}
+                  </p>
                 </div>
 
               </div>
             ))}
+
+            {lowBalanceAccounts.length === 0 && (
+              <p>No low-balance accounts currently.</p>
+            )}
 
           </div>
 
@@ -236,37 +382,35 @@ export default function Dashboard() {
 
       </section>
 
-      {/* Performance Cards */}
+      {/* PERFORMANCE CARDS */}
       <section className="dashboard-bottom">
 
-        {/* Monthly Spend */}
+        {/* TOTAL SPEND */}
         <div className="dashboard-panel spend-panel">
 
-          <p className="metric-title">Monthly ad spend</p>
+          <p className="metric-title">
+            Total ad spend
+          </p>
 
-          <h2>₹1,96,000</h2>
+          <h2>
+            {formatCurrency(summary.totalSpend)}
+          </h2>
 
-          <span className="spend-trend">
-            ▲ 12% vs last month
-          </span>
+          <p className="panel-subtitle">
+            Reporting period: {dashboardData?.dateRange?.startDate || "—"}
+            {" "}to{" "}
+            {dashboardData?.dateRange?.endDate || "—"}
+          </p>
 
-          <svg
-            className="spend-chart"
-            viewBox="0 0 420 112"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M2 99 C42 98 66 87 94 76 S150 61 190 51 S256 34 302 22 S365 5 418 0"
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-          </svg>
+          <div className="spend-chart">
+            <p className="panel-subtitle">
+              Historical monthly spend is not yet provided by this API.
+            </p>
+          </div>
 
         </div>
 
-        {/* Leads */}
+        {/* LEADS */}
         <div className="dashboard-panel leads-panel">
 
           <p className="metric-title">
@@ -275,17 +419,21 @@ export default function Dashboard() {
 
           <div className="leads-container">
 
-            <div>
-              <h2>1,482</h2>
+            <div className="lead-metric">
+              <h2>
+                {Number(summary.totalLeads || 0).toLocaleString("en-IN")}
+              </h2>
               <span className="leads-badge">
-                ▲ 18% leads
+                Leads
               </span>
             </div>
 
-            <div>
-              <h2>₹132</h2>
+            <div className="lead-metric">
+              <h2>
+                {formatCurrency(summary.averageCPL)}
+              </h2>
               <span className="leads-badge">
-                ▼ 11% CPL
+                Average CPL
               </span>
             </div>
 
@@ -293,34 +441,25 @@ export default function Dashboard() {
 
         </div>
 
-        {/* Campaign Status */}
+        {/* CAMPAIGN STATUS */}
         <div className="dashboard-panel campaign-panel">
 
           <p className="metric-title">
             Campaign status
           </p>
 
-          <div className="campaign-progress">
-            <span className="active-progress"></span>
-            <span className="paused-progress"></span>
-            <span className="rejected-progress"></span>
-            <span className="other-progress"></span>
+          <div className="campaign-item">
+            <span>
+              <i className="campaign-dot active-dot"></i>
+              Active
+            </span>
+            <strong>{summary.totalActiveCampaigns ?? 0}</strong>
           </div>
 
-          <div className="campaign-item">
-            <span>Active</span>
-            <strong>20</strong>
-          </div>
-
-          <div className="campaign-item">
-            <span>Paused</span>
-            <strong>2</strong>
-          </div>
-
-          <div className="campaign-item">
-            <span>Rejected</span>
-            <strong>2</strong>
-          </div>
+          <p className="panel-subtitle">
+            Only active campaign counts are currently returned by the backend.
+            Paused and rejected campaign counts are not available yet.
+          </p>
 
         </div>
 

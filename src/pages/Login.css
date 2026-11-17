@@ -1,4 +1,8 @@
 
+/* =====================================
+   LOGIN PAGE
+===================================== */
+
 .login-page {
   width: 100%;
   min-height: 100vh;
@@ -9,7 +13,9 @@
   overflow: hidden;
 }
 
-/* LEFT SECTION */
+/* =====================================
+   LEFT SECTION
+===================================== */
 
 .login-left {
   position: relative;
@@ -51,18 +57,26 @@
   color: #9da8ce;
 }
 
-/* Hero */
+/* =====================================
+   HERO SECTION - CENTERED
+===================================== */
 
 .login-hero {
-  margin-top: 49px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  margin-top: 0;
+  text-align: center;
 }
 
 .login-hero h1 {
-  font-size: clamp(25px, 3.2vw, 36px);
-  line-height: 1.12;
+  font-size: clamp(28px, 3.2vw, 40px);
+  line-height: 1.15;
   letter-spacing: -1.3px;
   font-weight: 600;
-  margin-bottom: 11px;
+  margin-bottom: 15px;
 }
 
 .login-hero h1 span {
@@ -70,147 +84,24 @@
 }
 
 .login-hero p {
-  font-size: 11px;
-  line-height: 1.6;
-  color: #9da8ce;
-}
-
-/* Monthly Spend */
-
-.login-spend-card {
-  position: absolute;
-  top: 48%;
-  left: 7.2%;
-  width: 232px;
-  height: 90px;
-  padding: 16px;
-  border-radius: 14px;
-  background: #392cff;
-  z-index: 1;
-}
-
-.login-spend-card p {
-  font-size: 9px;
-  color: #d4d2ff;
-  margin-bottom: 4px;
-}
-
-.login-spend-card h2 {
-  font-size: 25px;
-  font-weight: 500;
-  line-height: 1;
-  margin-bottom: 5px;
-}
-
-.login-spend-card span {
-  font-size: 8px;
-  color: #d4d2ff;
-}
-
-/* Account Card */
-
-.login-account-card {
-  position: absolute;
-  top: 61.5%;
-  left: 29.5%;
-  width: 233px;
-  height: 108px;
-  padding: 14px 16px;
-  background: #121a3b;
-  border: 1px solid #26345f;
-  border-radius: 15px;
-  z-index: 2;
-}
-
-.login-account-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 9px;
-}
-
-.login-account-header h3 {
-  font-size: 10px;
-  font-weight: 500;
-}
-
-.login-account-header span {
-  background: #594708;
-  color: #ffdf5d;
-  padding: 4px 9px;
-  border-radius: 20px;
-  font-size: 7px;
-}
-
-.login-account-card > p {
-  font-size: 8px;
-  color: #9da8ce;
-  margin-bottom: 3px;
-}
-
-.login-account-card h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.login-progress {
-  width: 100%;
-  height: 5px;
-  border-radius: 10px;
-  background: #293665;
-  overflow: hidden;
-}
-
-.login-progress div {
-  width: 25%;
-  height: 100%;
-  background: #ffca3d;
-  border-radius: 10px;
-}
-
-/* Critical Alert */
-
-.login-alert-card {
-  position: absolute;
-  top: 78.5%;
-  left: 10%;
-  width: 245px;
-  height: 50px;
-  padding: 9px 13px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 13px;
-  background: #ffca3d;
-  color: #17172b;
-  z-index: 3;
-}
-
-.login-alert-icon {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #ff592e;
   font-size: 13px;
-  font-weight: 600;
+  line-height: 1.7;
+  color: #9da8ce;
 }
 
-.login-alert-card h3 {
-  font-size: 9px;
-  font-weight: 600;
-  margin-bottom: 2px;
+/* =====================================
+   REMOVE BOTTOM PREVIEW CARDS
+===================================== */
+
+.login-spend-card,
+.login-account-card,
+.login-alert-card {
+  display: none !important;
 }
 
-.login-alert-card p {
-  font-size: 8px;
-}
-
-/* RIGHT SECTION */
+/* =====================================
+   RIGHT SECTION
+===================================== */
 
 .login-right {
   min-height: 100vh;
@@ -226,7 +117,9 @@
   max-width: 288px;
 }
 
-/* Login Heading */
+/* =====================================
+   LOGIN HEADING
+===================================== */
 
 .login-form-heading {
   margin-bottom: 16px;
@@ -243,7 +136,9 @@
   color: #9da8ce;
 }
 
-/* Form Fields */
+/* =====================================
+   FORM FIELDS
+===================================== */
 
 .login-field {
   margin-bottom: 13px;
@@ -282,7 +177,9 @@
   color: #818db6;
 }
 
-/* Password */
+/* =====================================
+   PASSWORD
+===================================== */
 
 .login-password-wrapper {
   display: flex;
@@ -308,7 +205,9 @@
   cursor: pointer;
 }
 
-/* Login Options */
+/* =====================================
+   LOGIN OPTIONS
+===================================== */
 
 .login-options {
   display: flex;
@@ -363,6 +262,11 @@
   transform: translateX(14px);
 }
 
+.remember-option input:focus-visible + .remember-toggle {
+  outline: 2px solid #858aff;
+  outline-offset: 3px;
+}
+
 .forgot-password {
   border: none;
   background: transparent;
@@ -371,7 +275,9 @@
   cursor: pointer;
 }
 
-/* Sign In Button */
+/* =====================================
+   SIGN IN BUTTON
+===================================== */
 
 .login-submit {
   width: 100%;
@@ -390,7 +296,9 @@
   background: #5147ff;
 }
 
-/* Footer */
+/* =====================================
+   FOOTER
+===================================== */
 
 .login-footer {
   margin-top: 15px;
@@ -414,7 +322,9 @@
   color: #9da8ce;
 }
 
-/* Responsive */
+/* =====================================
+   RESPONSIVE - TABLET
+===================================== */
 
 @media (max-width: 900px) {
   .login-page {
@@ -425,14 +335,26 @@
     padding-left: 6%;
   }
 
+  .login-hero {
+    width: 88%;
+  }
+
   .login-hero h1 {
     font-size: 29px;
   }
 
-  .login-account-card {
-    left: 24%;
+  .login-right {
+    padding: 25px;
+  }
+
+  .login-form-container {
+    max-width: 288px;
   }
 }
+
+/* =====================================
+   RESPONSIVE - MOBILE
+===================================== */
 
 @media (max-width: 650px) {
   .login-page {
@@ -441,33 +363,25 @@
   }
 
   .login-left {
-    min-height: 470px;
+    min-height: 350px;
     border-right: none;
     border-bottom: 1px solid #202747;
     padding: 25px;
   }
 
   .login-hero {
-    margin-top: 40px;
+    top: 58%;
+    left: 50%;
+    width: 90%;
+    transform: translate(-50%, -50%);
   }
 
   .login-hero h1 {
     font-size: 30px;
   }
 
-  .login-spend-card {
-    left: 25px;
-    top: 280px;
-  }
-
-  .login-account-card {
-    left: auto;
-    right: 20px;
-    top: 365px;
-  }
-
-  .login-alert-card {
-    display: none;
+  .login-hero p {
+    font-size: 12px;
   }
 
   .login-right {
@@ -477,5 +391,27 @@
 
   .login-form-container {
     max-width: 380px;
+  }
+}
+
+/* =====================================
+   SMALL MOBILE
+===================================== */
+
+@media (max-width: 380px) {
+  .login-left {
+    min-height: 320px;
+  }
+
+  .login-hero h1 {
+    font-size: 26px;
+  }
+
+  .login-hero p {
+    font-size: 11px;
+  }
+
+  .login-right {
+    padding: 35px 20px;
   }
 }

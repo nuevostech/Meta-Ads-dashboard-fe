@@ -6,19 +6,59 @@ import "./Login.css";
 function Login() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("vidhya@ntqsdigital.com");
+  const [email, setEmail] = useState("thanvi@ntqsdigital.com");
   const [password, setPassword] = useState("password123");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
+  const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    // Connect your admin login API here.
-    // This navigation is only for UI testing.
-    navigate("/");
-  };
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
+      }
+    );
 
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Invalid email or password");
+    }
+
+    // Clear previous login details
+    localStorage.removeItem("token");
+    localStorage.removeItem("adminUser");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("adminUser");
+
+    // Store admin details based on Remember Me
+    const storage = rememberMe ? localStorage : sessionStorage;
+
+    storage.setItem("token", data.token);
+    storage.setItem("adminUser", JSON.stringify(data.user));
+
+    navigate("/dashboard");
+
+  } catch (error) {
+    setError(error.message || "Login failed. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="login-page">
 
@@ -159,12 +199,16 @@ function Login() {
               </button>
 
             </div>
+            {error && <p className="login-error">{error}</p>}
 
             {/* Sign In */}
-            <button type="submit" className="login-submit">
-              Sign in
-            </button>
-
+            <button
+  type="submit"
+  className="login-submit"
+  disabled={loading}
+>
+  {loading ? "Signing in..." : "Sign in"}
+</button>
           </form>
 
           {/* Footer */}
