@@ -1,99 +1,37 @@
+
 .dashboard-page {
   width: 100%;
-  min-height: 100vh;
-  padding: 23px;
+  min-height: 100%;
+  padding: 0 0 23px;
   color: #f4f5ff;
   background: #090d25;
+  box-sizing: border-box;
 }
 
-/* Header */
+/* PAGE HEADER */
 
 .dashboard-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-.dashboard-heading h1 {
-  font-size: 20px;
+.dashboard-header h1 {
+  font-size: 24px;
   font-weight: 600;
-  margin-bottom: 5px;
+  color: #f4f5ff;
+  margin: 0 0 6px;
 }
 
-.dashboard-heading p {
-  font-size: 10px;
+.dashboard-header p {
+  font-size: 13px;
   color: #9ba5ca;
+  margin: 0;
 }
 
-.dashboard-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.dashboard-search {
-  width: 160px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  border: 1px solid #222d5c;
-  border-radius: 20px;
-  background: #121a3c;
-  color: #aab4d7;
-}
-
-.dashboard-search span {
-  font-size: 17px;
-}
-
-.dashboard-search input {
-  width: 100%;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: white;
-  font-size: 9px;
-}
-
-.dashboard-search input::placeholder {
-  color: #aab4d7;
-}
-
-.dashboard-updated {
-  padding: 10px 12px;
-  border-radius: 20px;
-  background: #121a3c;
-  border: 1px solid #222d5c;
-  font-size: 9px;
-  white-space: nowrap;
-}
-
-.dashboard-refresh {
-  background: #392cff;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 9px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.dashboard-refresh:hover {
-  background: #5147ff;
-}
-
-.dashboard-refresh:disabled {
-  opacity: 0.7;
-  cursor: wait;
-}
-
-/* Statistics */
+/* SUMMARY CARDS */
 
 .dashboard-stats {
   display: grid;
@@ -103,6 +41,7 @@
 }
 
 .stat-card {
+  min-width: 0;
   min-height: 75px;
   display: flex;
   align-items: center;
@@ -111,6 +50,7 @@
   border-radius: 15px;
   background: #121a3b;
   border: 1px solid #202c5a;
+  box-sizing: border-box;
 }
 
 .stat-icon {
@@ -144,15 +84,16 @@
 .stat-card h2 {
   font-size: 22px;
   font-weight: 600;
-  margin-bottom: 2px;
+  margin: 0 0 2px;
 }
 
 .stat-card p {
   font-size: 9px;
   color: #9aa5ca;
+  margin: 0;
 }
 
-/* Middle Section */
+/* MIDDLE SECTION */
 
 .dashboard-middle {
   display: grid;
@@ -167,6 +108,7 @@
   border: 1px solid #202c5a;
   border-radius: 15px;
   padding: 16px;
+  box-sizing: border-box;
 }
 
 .accounts-panel,
@@ -178,28 +120,45 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 17px;
 }
 
 .panel-header h2 {
   font-size: 14px;
   font-weight: 500;
+  margin: 0;
 }
 
-.panel-header button {
+.panel-subtitle {
+  margin: 5px 0 0;
+  color: #8995bd;
+  font-size: 9px;
+}
+
+.panel-view-button {
+  flex-shrink: 0;
   background: #1c2757;
   border: none;
   color: white;
   border-radius: 20px;
   padding: 9px 13px;
   font-size: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-/* Accounts Table */
+.panel-view-button:hover {
+  background: #293878;
+}
+
+/* ACCOUNTS TABLE */
 
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #394575 transparent;
 }
 
 .accounts-table {
@@ -214,6 +173,7 @@
   font-weight: 400;
   font-size: 8px;
   padding: 7px 6px;
+  white-space: nowrap;
 }
 
 .accounts-table td {
@@ -222,11 +182,17 @@
   white-space: nowrap;
 }
 
+.account-name {
+  font-weight: 500;
+  color: #f4f5ff;
+}
+
 .account-badge {
   display: inline-block;
   border-radius: 20px;
   padding: 4px 9px;
   font-size: 8px;
+  white-space: nowrap;
 }
 
 .account-badge.healthy {
@@ -255,7 +221,13 @@
   padding: 25px !important;
 }
 
-/* Alerts */
+.dashboard-refresh-status {
+  margin: 12px 0 0;
+  color: #9da8ce;
+  font-size: 9px;
+}
+
+/* ALERTS */
 
 .alerts-list {
   display: flex;
@@ -298,19 +270,24 @@
   color: #17172b;
 }
 
+.alert-content {
+  min-width: 0;
+}
+
 .alert-content h3 {
   font-size: 9px;
   font-weight: 500;
-  margin-bottom: 3px;
+  margin: 0 0 3px;
 }
 
 .alert-content p {
   font-size: 8px;
   color: #9da8ce;
   line-height: 1.5;
+  margin: 0;
 }
 
-/* Bottom Section */
+/* BOTTOM SECTION */
 
 .dashboard-bottom {
   display: grid;
@@ -322,7 +299,7 @@
   min-height: 184px;
 }
 
-/* Monthly Spend */
+/* MONTHLY SPEND */
 
 .spend-panel {
   background: #382cff;
@@ -334,7 +311,7 @@
 .metric-title {
   font-size: 9px;
   color: #9da8ce;
-  margin-bottom: 12px;
+  margin: 0 0 12px;
 }
 
 .spend-panel .metric-title {
@@ -344,7 +321,7 @@
 .spend-panel h2 {
   font-size: 27px;
   font-weight: 500;
-  margin-bottom: 3px;
+  margin: 0 0 3px;
 }
 
 .spend-trend {
@@ -360,17 +337,23 @@
   bottom: 15px;
 }
 
-/* Leads */
+/* LEADS */
 
 .leads-container {
   display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 22px;
+}
+
+.lead-metric {
+  min-width: 0;
 }
 
 .leads-container h2 {
   font-size: 27px;
   font-weight: 500;
-  margin-bottom: 4px;
+  margin: 0 0 4px;
 }
 
 .leads-badge {
@@ -383,109 +366,155 @@
   white-space: nowrap;
 }
 
-/* Campaign Status */
+/* CAMPAIGN STATUS */
 
 .campaign-progress {
-  display: flex;
-  gap: 3px;
+  width: 100%;
   height: 11px;
   margin: 10px 0 5px;
+  display: block;
   overflow: hidden;
-}
-
-.active-progress {
-  width: 72%;
-  background: #392cff;
-}
-
-.paused-progress {
-  width: 7%;
-  background: #9aa2b7;
-}
-
-.rejected-progress {
-  width: 7%;
-  background: #ff5c2e;
-}
-
-.other-progress {
-  flex: 1;
-  background: #9855f4;
-  border-radius: 0 10px 10px 0;
+  border-radius: 10px;
+  background: #293665;
 }
 
 .campaign-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 9px 0;
   border-bottom: 1px solid #242e55;
   font-size: 9px;
 }
 
+.campaign-item:last-child {
+  border-bottom: none;
+}
+
+.campaign-item span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #c1c9e5;
+}
+
 .campaign-item strong {
   font-weight: 600;
 }
 
-/* Responsive */
+.campaign-dot {
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.active-dot {
+  background: #392cff;
+}
+
+.paused-dot {
+  background: #9aa2b7;
+}
+
+.rejected-dot {
+  background: #ff5c2e;
+}
+
+/* TABLET */
 
 @media (max-width: 1000px) {
-  .dashboard-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .dashboard-stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .dashboard-middle {
     grid-template-columns: 1fr;
   }
+
+  .dashboard-bottom {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .campaign-panel {
+    grid-column: span 2;
+  }
 }
+
+/* MOBILE */
 
 @media (max-width: 700px) {
   .dashboard-page {
-    padding: 16px 12px;
+    padding: 0 0 16px;
   }
 
-  .dashboard-header-actions {
-    width: 100%;
-    flex-wrap: wrap;
+  .dashboard-header {
+    margin-bottom: 18px;
   }
 
-  .dashboard-search {
-    flex: 1;
+  .dashboard-header h1 {
+    font-size: 20px;
+  }
+
+  .dashboard-header p {
+    font-size: 11px;
   }
 
   .dashboard-bottom {
     grid-template-columns: 1fr;
   }
 
+  .campaign-panel {
+    grid-column: auto;
+  }
+
   .accounts-table {
     min-width: 450px;
+  }
+
+  .dashboard-panel {
+    padding: 14px;
   }
 }
 
 @media (max-width: 450px) {
   .dashboard-stats {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
   }
 
   .stat-card {
+    gap: 8px;
     padding: 10px;
   }
 
   .stat-icon {
     width: 30px;
     height: 30px;
+    font-size: 15px;
   }
 
-  .dashboard-heading h1 {
-    font-size: 18px;
+  .stat-card h2 {
+    font-size: 19px;
   }
 
-  .dashboard-updated {
+  .stat-card p {
     font-size: 8px;
+  }
+
+  .panel-header h2 {
+    font-size: 13px;
+  }
+
+  .panel-view-button {
+    padding: 8px 10px;
+  }
+
+  .leads-container {
+    gap: 16px;
+  }
+
+  .leads-container h2 {
+    font-size: 24px;
   }
 }

@@ -1,225 +1,476 @@
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import "./AdAccounts.css";
 
-const initialAccounts = [
-  {
-    id: 1,
-    name: "NTQS Digital",
-    balance: 8500,
-    spend: 3200,
-    status: "Healthy",
-    type: "healthy",
-  },
-  {
-    id: 2,
-    name: "Shootza",
-    balance: 1200,
-    spend: 1050,
-    status: "Low Balance",
-    type: "low",
-  },
-  {
-    id: 3,
-    name: "Client A",
-    balance: 450,
-    spend: 450,
-    status: "Critical",
-    type: "critical",
-  },
-  {
-    id: 4,
-    name: "Client B",
-    balance: 0,
-    spend: 0,
-    status: "Ads Stopped",
-    type: "stopped",
-  },
-  {
-    id: 5,
-    name: "Client C",
-    balance: 5900,
-    spend: 2300,
-    status: "Healthy",
-    type: "healthy",
-  },
-  {
-    id: 6,
-    name: "Client D",
-    balance: 2400,
-    spend: 900,
-    status: "Healthy",
-    type: "healthy",
-  },
-  {
-    id: 7,
-    name: "Client E",
-    balance: 780,
-    spend: 620,
-    status: "Low Balance",
-    type: "low",
-  },
-];
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"
+).replace(/\/+$/, "");
+
+const API_URL = `${API_BASE_URL}/api/ad-accounts`;
 
 const filters = [
   { label: "All", value: "all" },
   { label: "Healthy", value: "healthy" },
-  { label: "Low balance", value: "low" },
+  { label: "Low Balance", value: "low" },
   { label: "Critical", value: "critical" },
   { label: "Stopped", value: "stopped" },
 ];
 
 const money = (value) =>
-  `₹${value.toLocaleString("en-IN")}`;
+  `₹${Number(value || 0).toLocaleString("en-IN", {
+    maximumFractionDigits: 2,
+  })}`;
+
+// Get the admin authentication token
+const getToken = () =>
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
+
+// Convert backend account data into the format used by this UI
+const normalizeAccount = (account) => {
+  const balance = Number(
+    account.availableBalance ??
+    account.available_balance ??
+    account.currentBalance ??
+    account.balance ??
+    0
+  );
+
+  const spend = Number(
+    account.todaySpend ??
+    account.today_spend ??
+    account.dailySpend ??
+    account.daily_spend ??
+    account.spend ??
+    account.totalSpend ??
+    account.total_spend ??
+    0
+  );
+
+  const backendStatus = String(
+    account.balanceStatus ??
+    account.balance_status ??
+    account.accountStatus ??
+    account.account_status ??
+    account.status ??
+    ""
+  ).toLowerCase();
+
+  let type = "healthy";
+  let status = "Healthy";
+
+  if (
+    backendStatus.includes("stopped") ||
+    backendStatus.includes("disabled") ||
+    backendStatus.includes("inactive")
+  ) {
+    type = "stopped";
+    status = "Ads Stopped";
+  } else if (
+    backendStatus.includes("urgent") ||
+    backendStatus.includes("critical")
+  ) {
+    type = "critical";
+    status = backendStatus.includes("urgent")
+      ? "Urgent"
+      : "Critical";
+  } else if (
+    backendStatus.includes("low")
+  ) {
+    type = "low";
+    status = "Low Balance";
+  } else {
+    // Fallback when the backend does not provide a balance status
+    if (balance <= 0) {
+      type = "stopped";
+      status = "Ads Stopped";
+    } else if (balance <= 500) {
+      type = "critical";
+      status = "Critical";
+    } else if (balance <= 2000) {
+      type = "low";
+      status = "Low Balance";
+    }
+  }
+
+  return {
+    id: account.id ?? account.accountId ?? account.account_id,
+    name:
+      account.accountName ??
+      account.account_name ??
+      account.name ??
+      account.businessName ??
+      account.accountId ??
+      account.account_id ??
+      "Unnamed Account",
+    balance,
+    spend,
+    status,
+    type,
+  };
+};
 
 export default function AdAccounts() {
-  const [accounts, setAccounts] = useState(initialAccounts);
+  const [accounts, setAccounts] = useState([]);
   const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [updated, setUpdated] = useState("11:35 AM");
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const counts = {
-    all: accounts.length,
-    healthy: accounts.filter((a) => a.type === "healthy").length,
-    low: accounts.filter((a) => a.type === "low").length,
-    critical: accounts.filter((a) => a.type === "critical").length,
-    stopped: accounts.filter((a) => a.type === "stopped").length,
-  };
+  // =====================================
+  // FETCH AD ACCOUNTS API
+  // =====================================
 
-  const filteredAccounts = accounts.filter((account) => {
-    const matchesFilter =
-      activeFilter === "all" || account.type === activeFilter;
+  const fetchAdAccounts = useCallback(async () => {
+    try {
+      setRefreshing(true);
+      setError("");
 
-    const matchesSearch = account.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+      const token = getToken();
 
-    return matchesFilter && matchesSearch;
-  });
+      if (!token) {
+        throw new Error("Authentication token not found. Please login again.");
+      }
 
-  const handleRefresh = () => {
-    setRefreshing(true);
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-    // Replace this sample refresh with your API call.
-    setUpdated(
-      new Date().toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+      const data = await response.json();
+
+      if (response.status === 401 || response.status === 403) {
+        throw new Error("Session expired or access denied. Please login again.");
+      }
+
+      if (!response.ok || data.success === false) {
+        throw new Error(
+          data.message || "Failed to fetch ad accounts."
+        );
+      }
+
+      // Supports common API response formats
+      const accountList = Array.isArray(data)
+        ? data
+        : Array.isArray(data.accounts)
+        ? data.accounts
+        : Array.isArray(data.data)
+        ? data.data
+        : Array.isArray(data.data?.accounts)
+        ? data.data.accounts
+        : [];
+
+      setAccounts(accountList.map(normalizeAccount));
+    } catch (err) {
+      console.error("Ad Accounts API Error:", err);
+      setError(err.message || "Unable to load ad accounts.");
+      setAccounts([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  // Initial API call
+  useEffect(() => {
+    fetchAdAccounts();
+  }, [fetchAdAccounts]);
+
+  // =====================================
+  // GLOBAL SEARCH EVENT
+  // =====================================
+
+  useEffect(() => {
+    const handleGlobalSearch = (event) => {
+      setSearch(event.detail || "");
+    };
+
+    window.addEventListener("account-search", handleGlobalSearch);
+
+    return () => {
+      window.removeEventListener("account-search", handleGlobalSearch);
+    };
+  }, []);
+
+  // =====================================
+  // GLOBAL REFRESH EVENT
+  // =====================================
+
+  useEffect(() => {
+    const handleGlobalRefresh = () => {
+      fetchAdAccounts();
+    };
+
+    window.addEventListener(
+      "dashboard-refresh",
+      handleGlobalRefresh
     );
 
-    setTimeout(() => setRefreshing(false), 500);
+    return () => {
+      window.removeEventListener(
+        "dashboard-refresh",
+        handleGlobalRefresh
+      );
+    };
+  }, [fetchAdAccounts]);
+
+  // =====================================
+  // MANUAL REFRESH
+  // =====================================
+
+  const handleRefresh = () => {
+    if (!refreshing) {
+      fetchAdAccounts();
+    }
   };
+
+  // =====================================
+  // ACCOUNT COUNTS
+  // =====================================
+
+  const counts = useMemo(() => ({
+    all: accounts.length,
+    healthy: accounts.filter(
+      (account) => account.type === "healthy"
+    ).length,
+    low: accounts.filter(
+      (account) => account.type === "low"
+    ).length,
+    critical: accounts.filter(
+      (account) => account.type === "critical"
+    ).length,
+    stopped: accounts.filter(
+      (account) => account.type === "stopped"
+    ).length,
+  }), [accounts]);
+
+  // =====================================
+  // FILTER AND SEARCH
+  // =====================================
+
+  const filteredAccounts = useMemo(() => {
+    return accounts.filter((account) => {
+      const matchesFilter =
+        activeFilter === "all" ||
+        account.type === activeFilter;
+
+      const matchesSearch = account.name
+        .toLowerCase()
+        .includes(search.trim().toLowerCase());
+
+      return matchesFilter && matchesSearch;
+    });
+  }, [accounts, activeFilter, search]);
+
+  // =====================================
+  // RENDER
+  // =====================================
 
   return (
     <div className="ad-accounts-page">
 
-      {/* Header */}
-      <header className="ad-accounts-header">
+      {/* PAGE HEADER */}
+
+      <div className="ad-accounts-header">
         <div>
-          <h1>Ad accounts</h1>
-          <p>Prepaid balances refresh every 15 minutes.</p>
+          <h1>Ad Accounts</h1>
+          <p>
+            Monitor prepaid balances and spending
+            across all client accounts.
+          </p>
         </div>
 
-        <div className="ad-accounts-actions">
+        <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={refreshing}
+        >
+          {refreshing ? "Refreshing..." : "Refresh"}
+        </button>
+      </div>
 
-          <div className="ad-account-search">
-            <span>⌕</span>
-            <input
-              type="text"
-              placeholder="Search account..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+      {/* ACCOUNT SUMMARY */}
 
-          <span className="ad-account-updated">
-            Updated {updated}
-          </span>
+      <section className="account-summary">
 
-          <button
-            className="ad-account-refresh"
-            onClick={handleRefresh}
-            disabled={refreshing}
-          >
-            {refreshing ? "Refreshing..." : "Refresh"}
-          </button>
-
+        <div className="account-summary-item">
+          <span>Total Accounts</span>
+          <h2>{counts.all}</h2>
         </div>
-      </header>
 
-      {/* Filters */}
+        <div className="account-summary-item healthy-summary">
+          <span>Healthy</span>
+          <h2>{counts.healthy}</h2>
+        </div>
+
+        <div className="account-summary-item low-summary">
+          <span>Low Balance</span>
+          <h2>{counts.low}</h2>
+        </div>
+
+        <div className="account-summary-item critical-summary">
+          <span>Critical / Stopped</span>
+          <h2>{counts.critical + counts.stopped}</h2>
+        </div>
+
+      </section>
+
+      {/* FILTERS */}
+
       <div className="account-filters">
         {filters.map((filter) => (
           <button
             key={filter.value}
+            type="button"
             className={`account-filter ${
               activeFilter === filter.value ? "active" : ""
             }`}
             onClick={() => setActiveFilter(filter.value)}
           >
-            {filter.label} {counts[filter.value]}
+            {filter.label}
+
+            <span className="filter-count">
+              {counts[filter.value]}
+            </span>
           </button>
         ))}
       </div>
 
-      {/* Account Cards */}
-      <section className="account-cards-grid">
+      {/* ACCOUNT SECTION HEADER */}
 
-        {filteredAccounts.map((account) => {
-          const percentage =
-            account.spend + account.balance > 0
-              ? Math.min(
-                  (account.spend /
-                    (account.spend + account.balance)) *
-                    100,
-                  100
-                )
-              : 0;
+      <div className="account-section-heading">
+        <div>
+          <h2>All Ad Accounts</h2>
+          <p>
+            Showing {filteredAccounts.length} of {accounts.length} accounts
+          </p>
+        </div>
 
-          return (
-            <div className="account-card" key={account.id}>
-
-              <div className="account-card-header">
-                <h3>{account.name}</h3>
-
-                <span className={`account-status ${account.type}`}>
-                  {account.status}
-                </span>
-              </div>
-
-              <p className="account-balance-label">
-                Prepaid balance
-              </p>
-
-              <h2 className="account-balance">
-                {money(account.balance)}
-              </h2>
-
-              <div className="account-progress">
-                <div
-                  className={`account-progress-fill ${account.type}`}
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-
-              <p className="account-spend">
-                Spent today {money(account.spend)}
-              </p>
-
-            </div>
-          );
-        })}
-
-        {filteredAccounts.length === 0 && (
-          <div className="account-empty">
-            <h3>No accounts found</h3>
-            <p>Try changing your search or status filter.</p>
-          </div>
+        {refreshing && (
+          <span className="account-refreshing">
+            Refreshing...
+          </span>
         )}
+      </div>
 
-      </section>
+      {/* LOADING */}
+
+      {loading && (
+        <div className="account-empty">
+          <h3>Loading ad accounts...</h3>
+          <p>Please wait while we fetch account information.</p>
+        </div>
+      )}
+
+      {/* API ERROR */}
+
+      {!loading && error && (
+        <div className="account-empty">
+          <h3>Unable to load ad accounts</h3>
+          <p>{error}</p>
+
+          <button type="button" onClick={handleRefresh}>
+            Try Again
+          </button>
+        </div>
+      )}
+
+      {/* ACCOUNT CARDS */}
+
+      {!loading && !error && (
+        <section className="account-cards-grid">
+
+          {filteredAccounts.map((account) => {
+            const percentage =
+              account.spend + account.balance > 0
+                ? Math.min(
+                    (account.spend /
+                      (account.spend + account.balance)) * 100,
+                    100
+                  )
+                : 0;
+
+            return (
+              <div className="account-card" key={account.id}>
+
+                {/* Card Header */}
+
+                <div className="account-card-header">
+                  <div className="account-name-wrapper">
+                    <span
+                      className={`account-status-dot ${account.type}`}
+                    />
+
+                    <h3>{account.name}</h3>
+                  </div>
+
+                  <span
+                    className={`account-status ${account.type}`}
+                  >
+                    {account.status}
+                  </span>
+                </div>
+
+                {/* Balance */}
+
+                <p className="account-balance-label">
+                  Prepaid Balance
+                </p>
+
+                <h2 className="account-balance">
+                  {money(account.balance)}
+                </h2>
+
+                {/* Progress */}
+
+                <div className="account-progress">
+                  <div
+                    className={`account-progress-fill ${account.type}`}
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+
+                {/* Spending */}
+
+                <div className="account-card-footer">
+                  <span>Spent today</span>
+                  <strong>{money(account.spend)}</strong>
+                </div>
+
+              </div>
+            );
+          })}
+
+          {/* EMPTY STATE */}
+
+          {filteredAccounts.length === 0 && (
+            <div className="account-empty">
+              <div className="account-empty-icon">⌕</div>
+
+              <h3>No accounts found</h3>
+
+              <p>
+                No accounts match your search or selected filter.
+              </p>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveFilter("all");
+                  setSearch("");
+                }}
+              >
+                Clear Filter
+              </button>
+            </div>
+          )}
+
+        </section>
+      )}
 
     </div>
   );
