@@ -8,6 +8,7 @@ const API_BASE_URL = (
 
 const API_URL = `${API_BASE_URL}/api/reports`;
 
+// Only the three report templates shown in Figma.
 const reportCards = [
   {
     id: 1,
@@ -27,25 +28,11 @@ const reportCards = [
     title: "Funds and alert history",
     type: "balance_report",
   },
-  {
-    id: 4,
-    category: "Campaign",
-    title: "Campaign performance",
-    type: "campaign_performance",
-  },
 ];
-
-// =====================================
-// AUTHENTICATION
-// =====================================
 
 const getToken = () =>
   localStorage.getItem("token") ||
   sessionStorage.getItem("token");
-
-// =====================================
-// FORMAT DATE
-// =====================================
 
 const formatDate = (dateValue) => {
   if (!dateValue) return "Date unavailable";
@@ -59,13 +46,8 @@ const formatDate = (dateValue) => {
   return date.toLocaleDateString("en-IN", {
     month: "short",
     day: "numeric",
-    year: "numeric",
   });
 };
-
-// =====================================
-// FORMAT FILE NAME
-// =====================================
 
 const getFileName = (contentDisposition, fallback) => {
   if (!contentDisposition) return fallback;
@@ -85,14 +67,10 @@ const getFileName = (contentDisposition, fallback) => {
   return normalMatch ? normalMatch[1] : fallback;
 };
 
-// =====================================
-// DOWNLOAD BLOB
-// =====================================
-
 const downloadBlob = (blob, fileName) => {
   const url = window.URL.createObjectURL(blob);
-
   const link = document.createElement("a");
+
   link.href = url;
   link.download = fileName;
 
@@ -102,10 +80,6 @@ const downloadBlob = (blob, fileName) => {
 
   window.URL.revokeObjectURL(url);
 };
-
-// =====================================
-// READ API ERROR
-// =====================================
 
 const getResponseError = async (response) => {
   try {
@@ -125,10 +99,7 @@ function Reports() {
   const [downloadingId, setDownloadingId] = useState(null);
   const [error, setError] = useState("");
 
-  // =====================================
-  // FETCH REPORT HISTORY
-  // =====================================
-
+  // Fetch report history from backend.
   const fetchReportHistory = useCallback(async () => {
     try {
       setRefreshing(true);
@@ -168,12 +139,9 @@ function Reports() {
         );
       }
 
-      const reports = Array.isArray(result.data)
-        ? result.data
-        : [];
-
-      setExportsList(reports);
-
+      setExportsList(
+        Array.isArray(result.data) ? result.data : []
+      );
     } catch (err) {
       console.error("Report History Error:", err);
       setError(err.message || "Unable to load report history.");
@@ -184,18 +152,12 @@ function Reports() {
     }
   }, []);
 
-  // =====================================
-  // INITIAL LOAD
-  // =====================================
-
+  // Initial load.
   useEffect(() => {
     fetchReportHistory();
   }, [fetchReportHistory]);
 
-  // =====================================
-  // GLOBAL SEARCH
-  // =====================================
-
+  // Global Topbar search.
   useEffect(() => {
     const handleSearch = (event) => {
       setSearch(event.detail || "");
@@ -208,10 +170,7 @@ function Reports() {
     };
   }, []);
 
-  // =====================================
-  // GLOBAL REFRESH
-  // =====================================
-
+  // Global Topbar refresh.
   useEffect(() => {
     const handleRefresh = () => {
       fetchReportHistory();
@@ -224,31 +183,17 @@ function Reports() {
     };
   }, [fetchReportHistory]);
 
-  // =====================================
-  // FILTER REPORT HISTORY
-  // =====================================
-
+  // Filter report history.
   const filteredExports = useMemo(() => {
     const searchValue = search.trim().toLowerCase();
 
     if (!searchValue) return exportsList;
 
     return exportsList.filter((item) => {
-      const reportName = String(
-        item.reportName || ""
-      ).toLowerCase();
-
-      const reportType = String(
-        item.reportType || ""
-      ).toLowerCase();
-
-      const format = String(
-        item.exportFormat || ""
-      ).toLowerCase();
-
-      const status = String(
-        item.status || ""
-      ).toLowerCase();
+      const reportName = String(item.reportName || "").toLowerCase();
+      const reportType = String(item.reportType || "").toLowerCase();
+      const format = String(item.exportFormat || "").toLowerCase();
+      const status = String(item.status || "").toLowerCase();
 
       return (
         reportName.includes(searchValue) ||
@@ -259,10 +204,7 @@ function Reports() {
     });
   }, [exportsList, search]);
 
-  // =====================================
-  // FILTER REPORT TEMPLATES
-  // =====================================
-
+  // Filter the three report templates.
   const filteredReports = useMemo(() => {
     const searchValue = search.trim().toLowerCase();
 
@@ -275,10 +217,7 @@ function Reports() {
     );
   }, [search]);
 
-  // =====================================
-  // GENERATE REPORT API
-  // =====================================
-
+  // Generate PDF or CSV report.
   const handleReport = async (report, format) => {
     const requestKey = `${report.type}-${format}`;
 
@@ -323,7 +262,6 @@ function Reports() {
         throw new Error(await getResponseError(response));
       }
 
-      // Backend returns the generated file directly.
       const blob = await response.blob();
 
       const fileName = getFileName(
@@ -333,9 +271,7 @@ function Reports() {
 
       downloadBlob(blob, fileName);
 
-      // Refresh actual report history from PostgreSQL.
       await fetchReportHistory();
-
     } catch (err) {
       console.error("Generate Report Error:", err);
       setError(err.message || "Failed to generate report.");
@@ -344,10 +280,7 @@ function Reports() {
     }
   };
 
-  // =====================================
-  // DOWNLOAD EXISTING REPORT API
-  // =====================================
-
+  // Download existing report.
   const handleDownload = async (report) => {
     if (downloadingId !== null) return;
 
@@ -363,10 +296,8 @@ function Reports() {
         );
       }
 
-      if (report.status !== "completed") {
-        throw new Error(
-          "This report is not completed yet."
-        );
+      if (String(report.status).toLowerCase() !== "completed") {
+        throw new Error("This report is not completed yet.");
       }
 
       const response = await fetch(
@@ -390,7 +321,6 @@ function Reports() {
       }
 
       const blob = await response.blob();
-
       const extension = report.exportFormat || "pdf";
 
       const fileName = getFileName(
@@ -399,7 +329,6 @@ function Reports() {
       );
 
       downloadBlob(blob, fileName);
-
     } catch (err) {
       console.error("Download Report Error:", err);
       setError(err.message || "Failed to download report.");
@@ -408,15 +337,9 @@ function Reports() {
     }
   };
 
-  // =====================================
-  // RENDER
-  // =====================================
-
   return (
     <div className="reports-page">
-
-      {/* PAGE HEADING */}
-
+      {/* PAGE HEADER */}
       <div className="reports-header">
         <div>
           <h1>Reports</h1>
@@ -425,10 +348,9 @@ function Reports() {
       </div>
 
       {/* ERROR MESSAGE */}
-
       {error && (
-        <div className="reports-empty">
-          <p>{error}</p>
+        <div className="reports-error" role="alert">
+          <span>{error}</span>
 
           <button
             type="button"
@@ -440,19 +362,10 @@ function Reports() {
       )}
 
       {/* REPORT CARDS */}
-
       <section className="reports-cards">
         {filteredReports.map((report) => (
           <div
-            className={`report-card ${
-              report.type === "account_performance"
-                ? "weekly"
-                : report.type === "client_performance"
-                ? "monthly"
-                : report.type === "balance_report"
-                ? "balance"
-                : "campaign"
-            }`}
+            className={`report-card ${report.category.toLowerCase()}`}
             key={report.id}
           >
             <p className="report-category">
@@ -493,9 +406,7 @@ function Reports() {
       </section>
 
       {/* RECENT EXPORTS */}
-
       <section className="recent-exports">
-
         <div className="exports-header">
           <div>
             <h2>Recent exports</h2>
@@ -507,27 +418,18 @@ function Reports() {
           </span>
         </div>
 
-        {/* REFRESH STATUS */}
-
         {refreshing && (
           <p className="reports-refresh-status">
             Refreshing reports...
           </p>
         )}
 
-        {/* LOADING */}
-
-        {loading && (
+        {loading ? (
           <div className="exports-empty">
             Loading report history...
           </div>
-        )}
-
-        {/* REPORT HISTORY */}
-
-        {!loading && (
+        ) : (
           <div className="exports-list">
-
             {filteredExports.map((item) => {
               const format = String(
                 item.exportFormat || ""
@@ -542,9 +444,7 @@ function Reports() {
 
               return (
                 <div className="export-row" key={item.id}>
-
                   <div className="export-file-info">
-
                     <div className="export-file-icon">
                       {format || "FILE"}
                     </div>
@@ -558,15 +458,10 @@ function Reports() {
                         {formatDate(item.createdAt)}
                       </span>
                     </div>
-
                   </div>
 
                   <span className="export-date">
                     {formatDate(item.createdAt)}
-                  </span>
-
-                  <span className={`report-status ${status}`}>
-                    {status}
                   </span>
 
                   <button
@@ -580,9 +475,10 @@ function Reports() {
                   >
                     {isDownloading
                       ? "Downloading..."
-                      : "Download"}
+                      : status === "completed"
+                        ? "Download"
+                        : status}
                   </button>
-
                 </div>
               );
             })}
@@ -592,12 +488,9 @@ function Reports() {
                 No reports found.
               </div>
             )}
-
           </div>
         )}
-
       </section>
-
     </div>
   );
 }

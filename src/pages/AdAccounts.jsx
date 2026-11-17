@@ -284,13 +284,13 @@ export default function AdAccounts() {
           </p>
         </div>
 
-        <button
+        {/* <button
           type="button"
           onClick={handleRefresh}
           disabled={refreshing}
         >
           {refreshing ? "Refreshing..." : "Refresh"}
-        </button>
+        </button> */}
       </div>
 
       {/* ACCOUNT SUMMARY */}
