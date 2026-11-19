@@ -6,8 +6,8 @@ import "./Login.css";
 function Login() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("thanvi@ntqsdigital.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
