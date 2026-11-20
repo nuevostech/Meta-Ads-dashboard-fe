@@ -24,14 +24,14 @@
 }
 
 .ad-accounts-header h1 {
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 6px;
 }
 
 .ad-accounts-header p {
-  font-size: 11px;
+  font-size: 12px;
   color: #9da8ce;
   line-height: 1.5;
 }
@@ -62,13 +62,13 @@
 
 .account-summary-item span {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   color: #9da8ce;
   margin-bottom: 9px;
 }
 
 .account-summary-item h2 {
-  font-size: 25px;
+  font-size: 26px;
   font-weight: 600;
   color: #ffffff;
 }
@@ -111,7 +111,7 @@
   background: #121a3b;
   color: #e2e5f4;
 
-  font-size: 10px;
+  font-size: 11px;
   cursor: pointer;
 
   transition: 0.2s;
@@ -128,7 +128,7 @@
 }
 
 .filter-count {
-  font-size: 9px;
+  font-size: 10px;
   opacity: 0.8;
 }
 
@@ -145,19 +145,19 @@
 }
 
 .account-section-heading h2 {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 5px;
 }
 
 .account-section-heading p {
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
 }
 
 .account-refreshing {
-  font-size: 10px;
+  font-size: 11px;
   color: #858aff;
 }
 
@@ -213,7 +213,7 @@
 }
 
 .account-name-wrapper h3 {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #f4f5ff;
 
@@ -252,7 +252,7 @@
 .account-status {
   padding: 5px 9px;
   border-radius: 20px;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -282,13 +282,13 @@
 ========================================== */
 
 .account-balance-label {
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
   margin-bottom: 5px;
 }
 
 .account-balance {
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.5px;
   color: #ffffff;
@@ -343,12 +343,12 @@
 }
 
 .account-card-footer span {
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
 }
 
 .account-card-footer strong {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: #e8ebff;
 }
@@ -369,18 +369,18 @@
 }
 
 .account-empty-icon {
-  font-size: 30px;
+  font-size: 31px;
   color: #858aff;
   margin-bottom: 10px;
 }
 
 .account-empty h3 {
-  font-size: 15px;
+  font-size: 16px;
   margin-bottom: 8px;
 }
 
 .account-empty p {
-  font-size: 10px;
+  font-size: 11px;
   color: #9da8ce;
   margin-bottom: 16px;
 }
@@ -391,7 +391,7 @@
   border-radius: 8px;
   background: #392cff;
   color: white;
-  font-size: 10px;
+  font-size: 11px;
   cursor: pointer;
 }
 
@@ -429,7 +429,7 @@
   }
 
   .ad-accounts-header h1 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .account-summary {
@@ -463,11 +463,11 @@
   }
 
   .ad-accounts-header h1 {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   .ad-accounts-header p {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   /* Summary */
@@ -484,12 +484,12 @@
   }
 
   .account-summary-item span {
-    font-size: 9px;
+    font-size: 10px;
     margin-bottom: 7px;
   }
 
   .account-summary-item h2 {
-    font-size: 21px;
+    font-size: 22px;
   }
 
   /* Filters */
@@ -514,7 +514,7 @@
     flex-shrink: 0;
     min-height: 32px;
     padding: 7px 11px;
-    font-size: 9px;
+    font-size: 10px;
   }
 
   /* Section Heading */
@@ -524,11 +524,11 @@
   }
 
   .account-section-heading h2 {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .account-section-heading p {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   /* Cards */
@@ -549,20 +549,20 @@
   }
 
   .account-name-wrapper h3 {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .account-status {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .account-balance {
-    font-size: 22px;
+    font-size: 23px;
   }
 
   .account-card-footer span,
   .account-card-footer strong {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   /* Empty State */
@@ -582,11 +582,11 @@
   }
 
   .account-summary-item h2 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .account-summary-item span {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .account-card {
@@ -595,6 +595,6 @@
 
   .account-status {
     padding: 4px 7px;
-    font-size: 7px;
+    font-size: 8px;
   }
 }

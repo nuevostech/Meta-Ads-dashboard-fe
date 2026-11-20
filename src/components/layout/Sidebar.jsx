@@ -1,32 +1,137 @@
 
+import { useCallback, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
+
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"
+).replace(/\/+$/, "");
 
 const menuItems = [
   { name: "Dashboard", path: "/dashboard", icon: "▦" },
   { name: "Ad Accounts", path: "/ad-accounts", icon: "▤" },
-  { name: "Alerts", path: "/alerts", icon: "△", badge: 3 },
+  { name: "Alerts", path: "/alerts", icon: "△" },
   { name: "Performance", path: "/performance", icon: "⌁" },
   { name: "Campaigns", path: "/campaigns", icon: "◁" },
   { name: "Reports", path: "/reports", icon: "▯" },
   { name: "Settings", path: "/settings", icon: "⚙" },
 ];
 
+const getAdminUser = () => {
+  try {
+    return JSON.parse(
+      localStorage.getItem("adminUser") ||
+      sessionStorage.getItem("adminUser") ||
+      "{}"
+    );
+  } catch {
+    return {};
+  }
+};
+
+const getToken = () =>
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
+
+// Determine whether an alert is resolved
+const isAlertResolved = (alert) => {
+  if (alert.isResolved === true || alert.resolved === true) {
+    return true;
+  }
+
+  const status = String(alert.status || "").toLowerCase();
+
+  return status === "resolved";
+};
+
 const Sidebar = ({ sidebarCollapsed, onToggleSidebar }) => {
-  const adminUser = JSON.parse(
-    localStorage.getItem("adminUser") ||
-    sessionStorage.getItem("adminUser") ||
-    "{}"
-  );
+  const [activeAlertsCount, setActiveAlertsCount] = useState(0);
+
+  const adminUser = getAdminUser();
 
   const email = adminUser.email || "Admin";
   const role = adminUser.role || "Administrator";
 
   const avatar = email.charAt(0).toUpperCase();
 
+  // =====================================
+  // FETCH ACTIVE ALERT COUNT
+  // =====================================
+
+  const fetchAlertCount = useCallback(async () => {
+    try {
+      const token = getToken();
+
+      if (!token) {
+        setActiveAlertsCount(0);
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/alerts`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch alerts");
+      }
+
+      const result = await response.json();
+
+      // Support common API response structures
+      const alerts = Array.isArray(result.data)
+        ? result.data
+        : Array.isArray(result.data?.data)
+          ? result.data.data
+          : Array.isArray(result.alerts)
+            ? result.alerts
+            : [];
+
+      const unresolvedAlerts = alerts.filter(
+        (alert) => !isAlertResolved(alert)
+      );
+
+      setActiveAlertsCount(unresolvedAlerts.length);
+
+    } catch (error) {
+      console.error("Sidebar alert count error:", error.message);
+    }
+  }, []);
+
+  // =====================================
+  // LOAD AND REFRESH ALERT COUNT
+  // =====================================
+
+  useEffect(() => {
+    fetchAlertCount();
+
+    // Refresh when the global Refresh button is clicked
+    window.addEventListener("dashboard-refresh", fetchAlertCount);
+
+    // Refresh after resolving an alert
+    window.addEventListener("alerts-updated", fetchAlertCount);
+
+    // Refresh when returning to the application tab
+    window.addEventListener("focus", fetchAlertCount);
+
+    return () => {
+      window.removeEventListener("dashboard-refresh", fetchAlertCount);
+      window.removeEventListener("alerts-updated", fetchAlertCount);
+      window.removeEventListener("focus", fetchAlertCount);
+    };
+  }, [fetchAlertCount]);
+
+  // =====================================
+  // SIDEBAR UI
+  // =====================================
+
   return (
     <aside className="admin-sidebar" id="app-sidebar">
 
+      {/* Sidebar Header */}
       <div className="sidebar-header">
         <div className="sidebar-brand">
           <h2>NTQS Digital</h2>
@@ -37,7 +142,9 @@ const Sidebar = ({ sidebarCollapsed, onToggleSidebar }) => {
           type="button"
           className="sidebar-toggle"
           onClick={onToggleSidebar}
-          aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-label={
+            sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+          }
           aria-controls="app-sidebar"
           aria-expanded={!sidebarCollapsed}
         >
@@ -63,9 +170,9 @@ const Sidebar = ({ sidebarCollapsed, onToggleSidebar }) => {
               {item.name}
             </span>
 
-            {item.badge && (
+            {item.name === "Alerts" && activeAlertsCount > 0 && (
               <span className="sidebar-badge">
-                {item.badge}
+                {activeAlertsCount}
               </span>
             )}
           </NavLink>

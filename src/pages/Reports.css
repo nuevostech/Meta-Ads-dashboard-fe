@@ -26,14 +26,14 @@
 }
 
 .reports-header h1 {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 600;
   color: #f4f5ff;
   margin: 0 0 6px;
 }
 
 .reports-header p {
-  font-size: 13px;
+  font-size: 14px;
   color: #9ba5ca;
   margin: 0;
 }
@@ -79,14 +79,14 @@
 }
 
 .report-category {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   opacity: 0.8;
   margin: 0;
 }
 
 .report-card h2 {
-  font-size: 23px;
+  font-size: 24px;
   line-height: 1.25;
   font-weight: 500;
   max-width: 260px;
@@ -106,7 +106,7 @@
   border-radius: 20px;
   background: #ffffff;
   color: #17172b;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
@@ -130,7 +130,7 @@
   border-radius: 15px;
   background: #121a3b;
   color: #9da8ce;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 /* Error */
@@ -146,7 +146,7 @@
   border-radius: 10px;
   background: rgba(255, 80, 80, 0.08);
   color: #ffb4b4;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .reports-error button {
@@ -155,7 +155,7 @@
   border-radius: 7px;
   background: #ffcc42;
   color: #17172b;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -180,7 +180,7 @@
 }
 
 .recent-exports > .exports-header h2 {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 500;
   color: #f4f5ff;
   margin: 0;
@@ -188,7 +188,7 @@
 
 .exports-header p {
   color: #8995bd;
-  font-size: 10px;
+  font-size: 11px;
   margin: 5px 0 0;
 }
 
@@ -197,7 +197,7 @@
   border-radius: 20px;
   background: #1c2757;
   color: #c7cdeb;
-  font-size: 9px;
+  font-size: 10px;
   white-space: nowrap;
 }
 
@@ -239,7 +239,7 @@
   border-radius: 9px;
   background: #1c2757;
   color: #a9adff;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
 }
 
@@ -251,19 +251,19 @@
 }
 
 .export-name {
-  font-size: 10px;
+  font-size: 11px;
   color: #f0f2ff;
   overflow-wrap: anywhere;
 }
 
 .export-date {
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
 }
 
 .export-date-mobile {
   display: none;
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
 }
 
@@ -274,7 +274,7 @@
   border-radius: 20px;
   background: #ffcc42;
   color: #17172b;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -293,13 +293,13 @@
   padding: 30px 15px;
   text-align: center;
   color: #9da8ce;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .reports-refresh-status {
   margin: 10px 0;
   color: #9da8ce;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 /* Tablet */
@@ -322,11 +322,11 @@
   }
 
   .reports-header h1 {
-    font-size: 20px;
+    font-size: 21px;
   }
 
   .reports-header p {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .reports-cards {
@@ -340,7 +340,7 @@
   }
 
   .report-card h2 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .recent-exports {
@@ -348,7 +348,7 @@
   }
 
   .recent-exports > .exports-header h2 {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .export-row {
@@ -386,6 +386,6 @@
   }
 
   .export-name {
-    font-size: 9px;
+    font-size: 10px;
   }
 }

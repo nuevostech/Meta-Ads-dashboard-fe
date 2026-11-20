@@ -73,14 +73,14 @@
 }
 
 .sidebar-brand h2 {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   margin-bottom: 4px;
   color: #ffffff;
 }
 
 .sidebar-brand p {
-  font-size: 10px;
+  font-size: 11px;
   color: #9da8ce;
 }
 
@@ -106,7 +106,7 @@
   color: #dce3ff;
   text-decoration: none;
 
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 
   transition: 0.2s;
@@ -127,7 +127,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .sidebar-link-name {
@@ -147,7 +147,7 @@
   color: #ffffff;
 
   border-radius: 20px;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 /* Bottom User */
@@ -176,19 +176,19 @@
   background: #392cff;
   color: white;
 
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .sidebar-user-info h4 {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: #ffffff;
 }
 
 .sidebar-user-info p {
   margin-top: 3px;
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
 }
 
@@ -221,7 +221,7 @@
 }
 
 .admin-layout.sidebar-collapsed .sidebar-brand h2 {
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .admin-layout.sidebar-collapsed .sidebar-brand p,
@@ -245,7 +245,7 @@
 }
 
 .admin-layout.sidebar-collapsed .sidebar-icon {
-  font-size: 19px;
+  font-size: 20px;
 }
 
 .admin-layout.sidebar-collapsed .sidebar-user {

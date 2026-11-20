@@ -51,20 +51,20 @@
   background: #392cff;
   color: white;
   border-radius: 13px;
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 700;
   flex-shrink: 0;
 }
 
 .login-brand h2 {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
   color: #f4f5ff;
   margin: 0 0 5px;
 }
 
 .login-brand p {
-  font-size: 11px;
+  font-size: 12px;
   color: #9da8ce;
   margin: 0;
 }
@@ -95,7 +95,7 @@
 }
 
 .login-hero p {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.8;
   color: #9da8ce;
   margin: 0;
@@ -136,7 +136,7 @@
 }
 
 .login-form-heading h1 {
-  font-size: 32px;
+  font-size: 33px;
   line-height: 1.2;
   font-weight: 700;
   color: #f4f5ff;
@@ -144,7 +144,7 @@
 }
 
 .login-form-heading p {
-  font-size: 14px;
+  font-size: 15px;
   color: #9da8ce;
   margin: 0;
 }
@@ -159,7 +159,7 @@
 
 .login-field label {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #f4f5ff;
   margin-bottom: 9px;
@@ -178,7 +178,7 @@
   display: block;
   padding: 0 17px;
   color: #ffffff;
-  font-size: 13px;
+  font-size: 14px;
   outline: none;
   background-color: #121a3b;
 }
@@ -226,7 +226,7 @@
   box-shadow: none !important;
   background: transparent !important;
   color: #ffffff !important;
-  font-size: 13px;
+  font-size: 14px;
   appearance: none;
   -webkit-appearance: none;
 }
@@ -246,7 +246,7 @@
   box-shadow: none;
   background: transparent !important;
   color: #858aff;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   padding: 8px;
@@ -316,7 +316,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: 13px;
   color: #f4f5ff;
   cursor: pointer;
   position: relative;
@@ -369,7 +369,7 @@
   border: none;
   background: transparent;
   color: #858aff;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -383,7 +383,7 @@
 
 .login-error {
   color: #ff8585;
-  font-size: 12px;
+  font-size: 13px;
   margin: 0 0 14px;
   line-height: 1.5;
 }
@@ -399,7 +399,7 @@
   border-radius: 13px;
   background: #392cff;
   color: white;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -424,7 +424,7 @@
 }
 
 .login-footer p {
-  font-size: 12px;
+  font-size: 13px;
   color: #9da8ce;
   margin: 0 0 18px;
 }
@@ -436,7 +436,7 @@
 }
 
 .login-footer span {
-  font-size: 11px;
+  font-size: 12px;
   color: #9da8ce;
 }
 
@@ -459,11 +459,11 @@
   }
 
   .login-hero h1 {
-    font-size: 36px;
+    font-size: 37px;
   }
 
   .login-hero p {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .login-right {
@@ -495,15 +495,15 @@
   .brand-logo {
     width: 42px;
     height: 42px;
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .login-brand h2 {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   .login-brand p {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .login-hero {
@@ -514,12 +514,12 @@
   }
 
   .login-hero h1 {
-    font-size: 30px;
+    font-size: 31px;
     letter-spacing: -0.8px;
   }
 
   .login-hero p {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .login-right {
@@ -532,7 +532,7 @@
   }
 
   .login-form-heading h1 {
-    font-size: 28px;
+    font-size: 29px;
   }
 }
 
@@ -546,11 +546,11 @@
   }
 
   .login-hero h1 {
-    font-size: 26px;
+    font-size: 27px;
   }
 
   .login-hero p {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .login-right {
@@ -562,10 +562,10 @@
   }
 
   .remember-option {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .forgot-password {
-    font-size: 10px;
+    font-size: 11px;
   }
 }

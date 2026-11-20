@@ -25,20 +25,20 @@
 }
 
 .campaigns-title h1 {
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 600;
   margin: 0 0 6px;
   color: #ffffff;
 }
 
 .campaigns-title p {
-  font-size: 11px;
+  font-size: 12px;
   color: #9da8ce;
   margin: 0;
 }
 
 .campaigns-refreshing {
-  font-size: 10px;
+  font-size: 11px;
   color: #858aff;
 }
 
@@ -66,19 +66,19 @@
 }
 
 .campaign-summary p {
-  font-size: 10px;
+  font-size: 11px;
   margin: 0 0 5px;
 }
 
 .campaign-summary h2 {
-  font-size: 30px;
+  font-size: 31px;
   line-height: 1.1;
   font-weight: 600;
   margin: 0 0 6px;
 }
 
 .campaign-summary span {
-  font-size: 9px;
+  font-size: 10px;
 }
 
 /* Active */
@@ -179,7 +179,7 @@
   outline: none;
   background: transparent;
   color: #ffffff;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .campaigns-search-box input::placeholder {
@@ -196,7 +196,7 @@
   border-radius: 50%;
   background: #26345f;
   color: #ffffff;
-  font-size: 18px;
+  font-size: 19px;
   cursor: pointer;
 }
 
@@ -229,13 +229,13 @@
 }
 
 .campaigns-table-header h2 {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   margin: 0 0 5px;
 }
 
 .campaigns-table-header p {
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
   margin: 0;
 }
@@ -245,7 +245,7 @@
   border-radius: 20px;
   background: #202b56;
   color: #c7d0ff;
-  font-size: 9px;
+  font-size: 10px;
   white-space: nowrap;
 }
 
@@ -275,16 +275,20 @@
   min-width: 760px;
   border-collapse: collapse;
   text-align: left;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 /* Table Head */
 
 .campaigns-table th {
   padding: 12px 10px;
-  color: #9da8ce;
-  font-size: 9px;
-  font-weight: 500;
+  color: #f1f4ff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #394575;
   white-space: nowrap;
   background: #101832;
 }
@@ -295,7 +299,7 @@
   padding: 15px 10px;
   border-top: 1px solid #242e55;
   color: #f0f2ff;
-  font-size: 10px;
+  font-size: 11px;
   white-space: nowrap;
 }
 
@@ -322,7 +326,7 @@
   justify-content: center;
   padding: 5px 11px;
   border-radius: 20px;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -358,12 +362,12 @@
 }
 
 .campaigns-no-data h3 {
-  font-size: 13px;
+  font-size: 14px;
   margin: 0 0 7px;
 }
 
 .campaigns-no-data p {
-  font-size: 9px;
+  font-size: 10px;
   color: #9da8ce;
   margin: 0;
 }
@@ -377,7 +381,7 @@
   text-align: center;
   padding-top: 12px;
   color: #9da8ce;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 /* ==========================================
@@ -395,7 +399,7 @@
 }
 
 .pagination-info {
-  font-size: 10px;
+  font-size: 11px;
   color: #9da8ce;
 }
 
@@ -437,7 +441,7 @@
 .pagination-current-page {
   min-width: 22px;
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #ffffff;
   font-variant-numeric: tabular-nums;
@@ -473,7 +477,7 @@
   }
 
   .campaigns-title h1 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .campaign-summary {
@@ -482,7 +486,7 @@
   }
 
   .campaign-summary h2 {
-    font-size: 26px;
+    font-size: 27px;
   }
 
   .campaigns-table-panel {
@@ -504,11 +508,11 @@
   }
 
   .campaigns-title h1 {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   .campaigns-title p {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   /* Summary Cards */
@@ -526,15 +530,15 @@
   }
 
   .campaign-summary p {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .campaign-summary h2 {
-    font-size: 23px;
+    font-size: 24px;
   }
 
   .campaign-summary span {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   /* Search */
@@ -550,7 +554,7 @@
 
   .campaigns-search-box input {
     height: 40px;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   /* Table Panel */
@@ -565,15 +569,15 @@
   }
 
   .campaigns-table-header h2 {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .campaigns-table-header p {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .campaigns-total {
-    font-size: 8px;
+    font-size: 9px;
     padding: 6px 9px;
   }
 
@@ -585,12 +589,12 @@
 
   .campaigns-table th {
     padding: 11px 9px;
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .campaigns-table td {
     padding: 13px 9px;
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .campaigns-mobile-hint {
@@ -605,7 +609,7 @@
   }
 
   .pagination-info {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .pagination-controls {
@@ -630,7 +634,7 @@
 
 .campaigns-account-filter label {
   color: #e7e9f8 !important;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
 }
 
@@ -642,7 +646,7 @@
   background-color: #131d40 !important;
   border: 1px solid #29365f !important;
   border-radius: 9px !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   outline: none;
   color-scheme: dark;
   cursor: pointer;
@@ -680,11 +684,11 @@
   }
 
   .campaign-summary h2 {
-    font-size: 21px;
+    font-size: 22px;
   }
 
   .campaign-summary span {
-    font-size: 7px;
+    font-size: 8px;
   }
 
   .campaigns-table-panel {
@@ -692,6 +696,6 @@
   }
 
   .pagination-info {
-    font-size: 8px;
+    font-size: 9px;
   }
 }
