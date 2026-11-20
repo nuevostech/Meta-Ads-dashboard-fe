@@ -3,6 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
+// API configuration
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"
+).replace(/\/+$/, "");
+
 function Login() {
   const navigate = useNavigate();
 
@@ -11,58 +16,100 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
-const [error, setError] = useState("");
+  const [error, setError] = useState("");
+
+  // =====================================
+  // LOGIN SUBMIT
+  // =====================================
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  setError("");
-  setLoading(true);
+    setError("");
+    setLoading(true);
 
-  try {
-    const response = await fetch(
-      "http://localhost:5000/api/auth/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-          password,
-        }),
+    try {
+      // Read actual input values from the form.
+      // This also helps when Chrome autofills without
+      // triggering React's onChange event.
+      const formData = new FormData(e.currentTarget);
+
+      const submittedEmail = String(
+        formData.get("username") || email
+      ).trim();
+
+      const submittedPassword = String(
+        formData.get("password") || password
+      );
+
+      if (!submittedEmail || !submittedPassword) {
+        throw new Error("Please enter your email and password.");
       }
-    );
 
-    const data = await response.json();
+      const response = await fetch(
+        `${API_BASE_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: submittedEmail,
+            password: submittedPassword,
+          }),
+        }
+      );
 
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || "Invalid email or password");
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Invalid email or password"
+        );
+      }
+
+      if (!data.token) {
+        throw new Error("Login successful, but authentication token is missing.");
+      }
+
+      // Clear previous login details
+      localStorage.removeItem("token");
+      localStorage.removeItem("adminUser");
+
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("adminUser");
+
+      // Store details based on Remember Me
+      const storage = rememberMe
+        ? localStorage
+        : sessionStorage;
+
+      storage.setItem("token", data.token);
+      storage.setItem("adminUser", JSON.stringify(data.user));
+
+      // Navigate to dashboard
+      navigate("/dashboard");
+
+    } catch (error) {
+      setError(
+        error.message || "Login failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // Clear previous login details
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminUser");
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("adminUser");
+  // =====================================
+  // UI
+  // =====================================
 
-    // Store admin details based on Remember Me
-    const storage = rememberMe ? localStorage : sessionStorage;
-
-    storage.setItem("token", data.token);
-    storage.setItem("adminUser", JSON.stringify(data.user));
-
-    navigate("/dashboard");
-
-  } catch (error) {
-    setError(error.message || "Login failed. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
   return (
     <div className="login-page">
 
-      {/* Left Side */}
+      {/* =====================================
+          LEFT SIDE
+      ===================================== */}
+
       <section className="login-left">
 
         {/* Brand */}
@@ -126,53 +173,74 @@ const [error, setError] = useState("");
 
       </section>
 
-      {/* Right Side */}
+      {/* =====================================
+          RIGHT SIDE
+      ===================================== */}
+
       <section className="login-right">
 
         <div className="login-form-container">
 
+          {/* Heading */}
           <div className="login-form-heading">
             <h1>Welcome back</h1>
             <p>Sign in to check your client accounts.</p>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          {/* Login Form */}
+          <form
+            onSubmit={handleSubmit}
+            autoComplete="off"
+          >
 
             {/* Email */}
             <div className="login-field">
-              <label htmlFor="login-email">Work email</label>
+              <label htmlFor="login-email">
+                Work email
+              </label>
 
               <input
-                id="login-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your work email"
-                required
-              />
+  id="login-email"
+  name="login-email"
+  type="email"
+  autoComplete="off"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  placeholder="Enter your work email"
+  required
+/>
             </div>
 
             {/* Password */}
             <div className="login-field">
-              <label htmlFor="login-password">Password</label>
+              <label htmlFor="login-password">
+                Password
+              </label>
 
               <div className="login-password-wrapper">
+
                 <input
-                  id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  required
-                />
+  id="login-password"
+  name="login-password"
+  type={showPassword ? "text" : "password"}
+  autoComplete="new-password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  placeholder="Enter your password"
+  required
+/>
 
                 <button
                   type="button"
                   className="login-show-password"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={
+                    showPassword ? "Hide password" : "Show password"
+                  }
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
+
               </div>
             </div>
 
@@ -180,6 +248,7 @@ const [error, setError] = useState("");
             <div className="login-options">
 
               <label className="remember-option">
+
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -189,6 +258,7 @@ const [error, setError] = useState("");
                 <span className="remember-toggle"></span>
 
                 <span>Keep me signed in</span>
+
               </label>
 
               <button
@@ -199,16 +269,23 @@ const [error, setError] = useState("");
               </button>
 
             </div>
-            {error && <p className="login-error">{error}</p>}
+
+            {/* Error Message */}
+            {error && (
+              <p className="login-error" role="alert">
+                {error}
+              </p>
+            )}
 
             {/* Sign In */}
             <button
-  type="submit"
-  className="login-submit"
-  disabled={loading}
->
-  {loading ? "Signing in..." : "Sign in"}
-</button>
+              type="submit"
+              className="login-submit"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+
           </form>
 
           {/* Footer */}
@@ -220,7 +297,9 @@ const [error, setError] = useState("");
 
             <div className="login-footer-divider"></div>
 
-            <span>Read-only access to Meta ad accounts</span>
+            <span>
+              Read-only access to Meta ad accounts
+            </span>
 
           </div>
 

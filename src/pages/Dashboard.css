@@ -19,14 +19,14 @@
 }
 
 .dashboard-header h1 {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 600;
   color: #f4f5ff;
   margin: 0 0 6px;
 }
 
 .dashboard-header p {
-  font-size: 13px;
+  font-size: 14px;
   color: #9ba5ca;
   margin: 0;
 }
@@ -59,7 +59,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 18px;
+  font-size: 19px;
   flex-shrink: 0;
 }
 
@@ -82,13 +82,13 @@
 }
 
 .stat-card h2 {
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 600;
   margin: 0 0 2px;
 }
 
 .stat-card p {
-  font-size: 9px;
+  font-size: 10px;
   color: #9aa5ca;
   margin: 0;
 }
@@ -125,7 +125,7 @@
 }
 
 .panel-header h2 {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   margin: 0;
 }
@@ -133,7 +133,7 @@
 .panel-subtitle {
   margin: 5px 0 0;
   color: #8995bd;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .panel-view-button {
@@ -143,7 +143,7 @@
   color: white;
   border-radius: 20px;
   padding: 9px 13px;
-  font-size: 8px;
+  font-size: 9px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -165,14 +165,19 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .accounts-table th {
-  color: #9da8ce;
-  font-weight: 400;
-  font-size: 8px;
-  padding: 7px 6px;
+  color: #f1f4ff;
+  font-weight: 800;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 10px 6px;
+  background: #101832;
+  border-bottom: 1px solid #394575;
   white-space: nowrap;
 }
 
@@ -191,7 +196,7 @@
   display: inline-block;
   border-radius: 20px;
   padding: 4px 9px;
-  font-size: 8px;
+  font-size: 9px;
   white-space: nowrap;
 }
 
@@ -224,7 +229,7 @@
 .dashboard-refresh-status {
   margin: 12px 0 0;
   color: #9da8ce;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 /* ALERTS */
@@ -254,7 +259,7 @@
   place-items: center;
   border-radius: 50%;
   color: white;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .alert-circle.pink {
@@ -275,13 +280,13 @@
 }
 
 .alert-content h3 {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   margin: 0 0 3px;
 }
 
 .alert-content p {
-  font-size: 8px;
+  font-size: 9px;
   color: #9da8ce;
   line-height: 1.5;
   margin: 0;
@@ -307,28 +312,35 @@
   position: relative;
   overflow: hidden;
 }
+/* MONTHLY SPEND */
 
 .metric-title {
-  font-size: 9px;
+  font-size: 11px;
   color: #9da8ce;
   margin: 0 0 12px;
 }
 
 .spend-panel .metric-title {
-  color: #d4d2ff;
+  color: #ffffff;
 }
 
 .spend-panel h2 {
-  font-size: 27px;
+  font-size: 28px;
   font-weight: 500;
   margin: 0 0 3px;
+  color: #ffffff;
 }
 
 .spend-trend {
-  color: #d8d6ff;
-  font-size: 9px;
+  color: #ffffff !important;
+  font-size: 12px;
 }
 
+/* Last information line inside spend card */
+.spend-panel p,
+.spend-panel span {
+  color: #ffffff;
+}
 .spend-chart {
   position: absolute;
   width: calc(100% - 32px);
@@ -351,7 +363,7 @@
 }
 
 .leads-container h2 {
-  font-size: 27px;
+  font-size: 28px;
   font-weight: 500;
   margin: 0 0 4px;
 }
@@ -362,7 +374,7 @@
   border-radius: 20px;
   background: #064b3b;
   color: #61e3a6;
-  font-size: 8px;
+  font-size: 9px;
   white-space: nowrap;
 }
 
@@ -384,7 +396,7 @@
   justify-content: space-between;
   padding: 9px 0;
   border-bottom: 1px solid #242e55;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .campaign-item:last-child {
@@ -453,11 +465,11 @@
   }
 
   .dashboard-header h1 {
-    font-size: 20px;
+    font-size: 21px;
   }
 
   .dashboard-header p {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .dashboard-bottom {
@@ -491,19 +503,19 @@
   .stat-icon {
     width: 30px;
     height: 30px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .stat-card h2 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .stat-card p {
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .panel-header h2 {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .panel-view-button {
@@ -515,6 +527,6 @@
   }
 
   .leads-container h2 {
-    font-size: 24px;
+    font-size: 25px;
   }
 }

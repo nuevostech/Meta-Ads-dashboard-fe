@@ -19,14 +19,14 @@
 }
 
 .settings-header h1 {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 600;
   color: #f4f5ff;
   margin: 0 0 6px;
 }
 
 .settings-header p {
-  font-size: 13px;
+  font-size: 14px;
   color: #9ba5ca;
   margin: 0;
 }
@@ -61,14 +61,14 @@
 }
 
 .settings-card h2 {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   margin: 0;
 }
 
 .settings-card-heading p {
   color: #8995bd;
-  font-size: 9px;
+  font-size: 10px;
   margin: 5px 0 0;
 }
 
@@ -81,7 +81,7 @@
   border-radius: 9px;
   background: #1c2757;
   color: #b6b1ff;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 /* Balance Limits */
@@ -104,7 +104,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 11px;
   cursor: pointer;
 }
 
@@ -137,7 +137,7 @@
   border-radius: 20px;
   background: #1c2858;
   color: #e5e8fa;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .limit-input-wrapper input {
@@ -147,7 +147,7 @@
   outline: none;
   background: transparent;
   color: #ffffff;
-  font-size: 9px;
+  font-size: 10px;
   text-align: right;
 }
 
@@ -169,7 +169,7 @@
 }
 
 .refresh-settings h3 {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   margin: 0 0 10px;
 }
@@ -187,7 +187,7 @@
   border-radius: 20px;
   background: transparent;
   color: #e4e7f6;
-  font-size: 9px;
+  font-size: 10px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -223,14 +223,14 @@
 }
 
 .channel-name {
-  font-size: 10px;
+  font-size: 11px;
   color: #f0f2ff;
 }
 
 .channel-row p {
   margin: 4px 0 0;
   color: #8995bd;
-  font-size: 8px;
+  font-size: 9px;
 }
 
 /* Toggle Switch */
@@ -297,7 +297,7 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
   color: #ffffff;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .meta-connection {
@@ -308,7 +308,7 @@
 }
 
 .meta-connection h3 {
-  font-size: 26px;
+  font-size: 27px;
   font-weight: 400;
   margin: 0;
   color: white;
@@ -322,7 +322,7 @@
 }
 
 .meta-account-count {
-  font-size: 9px;
+  font-size: 10px;
   color: #d4d2ff;
   margin: 5px 0 14px;
 }
@@ -335,7 +335,7 @@
 
 .meta-api-description {
   max-width: 230px;
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1.6;
   color: #d4d2ff;
   margin: 0;
@@ -351,7 +351,7 @@
   border-radius: 15px;
   background: #121a3b;
   color: #9da8ce;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 /* Save Settings Footer */
@@ -366,7 +366,7 @@
 }
 
 .settings-save-message {
-  font-size: 10px;
+  font-size: 11px;
   color: #9da8ce;
 }
 
@@ -381,7 +381,7 @@
   border-radius: 9px;
   background: #392cff;
   color: white;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -393,7 +393,7 @@
 
 .settings-feedback {
   margin-bottom: 14px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .settings-error {
@@ -429,11 +429,11 @@
   }
 
   .settings-header h1 {
-    font-size: 20px;
+    font-size: 21px;
   }
 
   .settings-header p {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .settings-grid {

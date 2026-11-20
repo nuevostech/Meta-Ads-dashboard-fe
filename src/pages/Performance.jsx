@@ -467,13 +467,13 @@ function Performance() {
                   />
                   <XAxis
                     dataKey="day"
-                    tick={{ fill: "#8995bd", fontSize: 8 }}
+                    tick={{ fill: "#8995bd", fontSize: 9 }}
                     tickLine={false}
                     axisLine={false}
                   />
                   <YAxis
                     width={35}
-                    tick={{ fill: "#8995bd", fontSize: 8 }}
+                    tick={{ fill: "#8995bd", fontSize: 9 }}
                     tickLine={false}
                     axisLine={false}
                   />
@@ -482,7 +482,7 @@ function Performance() {
                       background: "#121a3b",
                       border: "1px solid #26345f",
                       borderRadius: 8,
-                      fontSize: 10,
+                      fontSize: 11,
                     }}
                     formatter={(value) => [value, "Leads"]}
                     labelFormatter={(day) => day}
@@ -546,7 +546,7 @@ function Performance() {
                     />
                     <XAxis
                       type="number"
-                      tick={{ fill: "#8995bd", fontSize: 8 }}
+                      tick={{ fill: "#8995bd", fontSize: 9 }}
                       tickLine={false}
                       axisLine={false}
                       tickFormatter={(value) => `₹${value}`}
@@ -555,7 +555,7 @@ function Performance() {
                       type="category"
                       dataKey="name"
                       width={90}
-                      tick={{ fill: "#e7e9f8", fontSize: 9 }}
+                      tick={{ fill: "#e7e9f8", fontSize: 10 }}
                       tickLine={false}
                       axisLine={false}
                     />
@@ -564,7 +564,7 @@ function Performance() {
                         background: "#121a3b",
                         border: "1px solid #26345f",
                         borderRadius: 8,
-                        fontSize: 10,
+                        fontSize: 11,
                       }}
                       formatter={(value) => [
                         formatCurrency(value, currency),
