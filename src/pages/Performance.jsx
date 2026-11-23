@@ -196,19 +196,17 @@ function Performance() {
   }, []);
 
   // Global Topbar refresh.
-  useEffect(() => {
-    const handleRefresh = async () => {
-      if (loadingAccounts || loadingInsights || refreshing) return;
+useEffect(() => {
+  const handleRefresh = async () => {
+    setRefreshing(true);
 
-      setRefreshing(true);
-
-      if (selectedAccountId) {
-        await fetchInsights(selectedAccountId, datePreset);
-      } else {
-        await fetchAccounts();
-        setRefreshing(false);
-      }
-    };
+    if (selectedAccountId) {
+      await fetchInsights(selectedAccountId, datePreset);
+    } else {
+      await fetchAccounts();
+      setRefreshing(false);
+    }
+  };
 
     window.addEventListener("dashboard-refresh", handleRefresh);
 
