@@ -110,21 +110,23 @@ export default function Dashboard() {
     };
   }, []);
 
-  // Refresh dashboard
-  const handleRefresh = useCallback(() => {
-    if (refreshing) return;
+  
 
+
+
+  // Listen for global refresh from Topbar
+useEffect(() => {
+  const handleGlobalRefresh = () => {
     setRefreshing(true);
     fetchDashboard();
-  }, [refreshing, fetchDashboard]);
+  };
 
-  useEffect(() => {
-    window.addEventListener("dashboard-refresh", handleRefresh);
+  window.addEventListener("dashboard-refresh", handleGlobalRefresh);
 
-    return () => {
-      window.removeEventListener("dashboard-refresh", handleRefresh);
-    };
-  }, [handleRefresh]);
+  return () => {
+    window.removeEventListener("dashboard-refresh", handleGlobalRefresh);
+  };
+}, [fetchDashboard]);
 
   // Actual backend response
   const summary = dashboardData?.summary || {};
