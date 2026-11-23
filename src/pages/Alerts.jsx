@@ -250,15 +250,7 @@ function Alerts() {
     };
   }, [fetchAlerts]);
 
-  // =====================================
-  // MANUAL REFRESH
-  // =====================================
-
-  const handleRefresh = () => {
-    if (!refreshing) {
-      fetchAlerts();
-    }
-  };
+  
 
   // =====================================
   // ALERT COUNTS
@@ -509,11 +501,12 @@ function Alerts() {
             <p>{error}</p>
 
             <button
-              type="button"
-              onClick={handleRefresh}
-            >
-              Try Again
-            </button>
+  type="button"
+  onClick={fetchAlerts}
+  disabled={refreshing}
+>
+  {refreshing ? "Refreshing..." : "Try Again"}
+</button>
           </div>
         )}
 

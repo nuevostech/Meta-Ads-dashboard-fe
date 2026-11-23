@@ -69,7 +69,6 @@ function Settings() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   const [dirty, setDirty] = useState(false);
   const [error, setError] = useState("");
@@ -273,44 +272,19 @@ function Settings() {
   }, [limits, channels, dirty, loading]);
 
   // Manually refresh Meta Ads data using the Topbar refresh event.
-  const handleRefresh = useCallback(async () => {
-    if (refreshing) return;
 
-    try {
-      setRefreshing(true);
-      setError("");
-      setSuccessMessage("");
+  // Listen to Topbar refresh event.
+useEffect(() => {
+  const handleRefresh = () => {
+    loadMetaStatus();
+  };
 
-      const result = await apiRequest("/api/settings/refresh", {
-        method: "POST",
-        body: JSON.stringify({}),
-      });
+  window.addEventListener("dashboard-refresh", handleRefresh);
 
-      setSuccessMessage(
-        result.message || "Meta Ads data refreshed successfully."
-      );
-
-      await loadMetaStatus();
-    } catch (err) {
-      console.error("Manual Refresh Error:", err);
-      setError(err.message || "Meta Ads refresh failed.");
-    } finally {
-      setRefreshing(false);
-    }
-  }, [refreshing, loadMetaStatus]);
-
-  // Listen to existing Topbar refresh event.
-  useEffect(() => {
-    const refresh = () => {
-      handleRefresh();
-    };
-
-    window.addEventListener("dashboard-refresh", refresh);
-
-    return () => {
-      window.removeEventListener("dashboard-refresh", refresh);
-    };
-  }, [handleRefresh]);
+  return () => {
+    window.removeEventListener("dashboard-refresh", handleRefresh);
+  };
+}, [loadMetaStatus]);
 
   // Search settings sections.
   const normalizedSearch = search.trim().toLowerCase();
@@ -353,7 +327,7 @@ function Settings() {
       </div>
 
       {/* Feedback */}
-      {(error || successMessage || saving || refreshing) && (
+      {(error || successMessage || saving) && (
         <div className="settings-feedback" role="status">
           {error && (
             <span className="settings-error">{error}</span>
@@ -361,9 +335,9 @@ function Settings() {
 
           {saving && <span>Saving settings...</span>}
 
-          {refreshing && <span>Refreshing Meta Ads data...</span>}
+        
 
-          {!error && !saving && !refreshing && successMessage && (
+          {!error && !saving && successMessage && (
             <span className="settings-saved">
               ✓ {successMessage}
             </span>

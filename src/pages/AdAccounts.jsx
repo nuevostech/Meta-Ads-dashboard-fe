@@ -201,32 +201,22 @@ export default function AdAccounts() {
   // =====================================
 
   useEffect(() => {
-    const handleGlobalRefresh = () => {
-      fetchAdAccounts();
-    };
+  const handleGlobalRefresh = () => {
+    fetchAdAccounts();
+  };
 
-    window.addEventListener(
-      "dashboard-refresh",
-      handleGlobalRefresh
-    );
+  window.addEventListener("dashboard-refresh", handleGlobalRefresh);
 
-    return () => {
-      window.removeEventListener(
-        "dashboard-refresh",
-        handleGlobalRefresh
-      );
-    };
-  }, [fetchAdAccounts]);
+  return () => {
+    window.removeEventListener("dashboard-refresh", handleGlobalRefresh);
+  };
+}, [fetchAdAccounts]);
 
   // =====================================
   // MANUAL REFRESH
   // =====================================
 
-  const handleRefresh = () => {
-    if (!refreshing) {
-      fetchAdAccounts();
-    }
-  };
+  
 
   // =====================================
   // ACCOUNT COUNTS
@@ -373,9 +363,13 @@ export default function AdAccounts() {
           <h3>Unable to load ad accounts</h3>
           <p>{error}</p>
 
-          <button type="button" onClick={handleRefresh}>
-            Try Again
-          </button>
+          <button
+  type="button"
+  onClick={fetchAdAccounts}
+  disabled={refreshing}
+>
+  {refreshing ? "Refreshing..." : "Try Again"}
+</button>
         </div>
       )}
 
