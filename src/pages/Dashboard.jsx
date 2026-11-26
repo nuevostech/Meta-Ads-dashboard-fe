@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import "./Dashboard.css";
 
-const API_URL = "http://localhost:5000/api/dashboard";
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/dashboard`;
 
 const formatCurrency = (value, currency = "INR") => {
   const amount = Number(value || 0);
